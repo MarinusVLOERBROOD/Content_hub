@@ -45,6 +45,8 @@ export default async function AgendaPage() {
     client: e.client,
     attendees: e.attendees.map((a) => ({ user: a.user })),
     tags: e.tags,
+    recurrenceRule: e.recurrenceRule,
+    parentId: e.parentId,
   }));
 
   const taskDeadlines = tasks

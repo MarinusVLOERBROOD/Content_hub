@@ -9,6 +9,8 @@ export const createTaskSchema = z.object({
   clientId: z.string().optional().nullable(),
   assigneeId: z.string().optional().nullable(),
   tags: z.array(z.object({ name: z.string(), color: z.string() })).default([]),
+  recurrenceRule: z.enum(["daily", "weekly", "monthly"]).optional().nullable(),
+  recurrenceEndAt: z.string().datetime().optional().nullable(),
 });
 
 export const updateTaskSchema = createTaskSchema.partial().extend({

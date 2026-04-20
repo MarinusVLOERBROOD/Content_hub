@@ -107,6 +107,9 @@ export const EventScalarFieldEnum = {
   color: 'color',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  recurrenceRule: 'recurrenceRule',
+  recurrenceEndAt: 'recurrenceEndAt',
+  parentId: 'parentId',
   creatorId: 'creatorId',
   clientId: 'clientId'
 } as const
@@ -143,6 +146,9 @@ export const TaskScalarFieldEnum = {
   position: 'position',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
+  recurrenceRule: 'recurrenceRule',
+  recurrenceEndAt: 'recurrenceEndAt',
+  parentId: 'parentId',
   creatorId: 'creatorId',
   assigneeId: 'assigneeId',
   clientId: 'clientId'

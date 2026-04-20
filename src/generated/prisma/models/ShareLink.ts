@@ -272,7 +272,7 @@ export type ShareLinkScalarWhereWithAggregatesInput = {
 
 export type ShareLinkCreateInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -285,7 +285,7 @@ export type ShareLinkCreateInput = {
 
 export type ShareLinkUncheckedCreateInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -324,7 +324,7 @@ export type ShareLinkUncheckedUpdateInput = {
 
 export type ShareLinkCreateManyInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -474,7 +474,7 @@ export type ShareLinkUpdateOneRequiredWithoutDownloadsNestedInput = {
 
 export type ShareLinkCreateWithoutCreatedByInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -486,7 +486,7 @@ export type ShareLinkCreateWithoutCreatedByInput = {
 
 export type ShareLinkUncheckedCreateWithoutCreatedByInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -537,7 +537,7 @@ export type ShareLinkScalarWhereInput = {
 
 export type ShareLinkCreateWithoutFilesInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -549,7 +549,7 @@ export type ShareLinkCreateWithoutFilesInput = {
 
 export type ShareLinkUncheckedCreateWithoutFilesInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -601,7 +601,7 @@ export type ShareLinkUncheckedUpdateWithoutFilesInput = {
 
 export type ShareLinkCreateWithoutDownloadsInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -613,7 +613,7 @@ export type ShareLinkCreateWithoutDownloadsInput = {
 
 export type ShareLinkUncheckedCreateWithoutDownloadsInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string
@@ -665,7 +665,7 @@ export type ShareLinkUncheckedUpdateWithoutDownloadsInput = {
 
 export type ShareLinkCreateManyCreatedByInput = {
   id?: string
-  token?: string
+  token: string
   message?: string | null
   recipients: string
   expiresAt: Date | string

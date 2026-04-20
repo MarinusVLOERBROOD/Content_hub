@@ -34,6 +34,9 @@ export type EventMinAggregateOutputType = {
   color: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  recurrenceRule: string | null
+  recurrenceEndAt: Date | null
+  parentId: string | null
   creatorId: string | null
   clientId: string | null
 }
@@ -48,6 +51,9 @@ export type EventMaxAggregateOutputType = {
   color: string | null
   createdAt: Date | null
   updatedAt: Date | null
+  recurrenceRule: string | null
+  recurrenceEndAt: Date | null
+  parentId: string | null
   creatorId: string | null
   clientId: string | null
 }
@@ -62,6 +68,9 @@ export type EventCountAggregateOutputType = {
   color: number
   createdAt: number
   updatedAt: number
+  recurrenceRule: number
+  recurrenceEndAt: number
+  parentId: number
   creatorId: number
   clientId: number
   _all: number
@@ -78,6 +87,9 @@ export type EventMinAggregateInputType = {
   color?: true
   createdAt?: true
   updatedAt?: true
+  recurrenceRule?: true
+  recurrenceEndAt?: true
+  parentId?: true
   creatorId?: true
   clientId?: true
 }
@@ -92,6 +104,9 @@ export type EventMaxAggregateInputType = {
   color?: true
   createdAt?: true
   updatedAt?: true
+  recurrenceRule?: true
+  recurrenceEndAt?: true
+  parentId?: true
   creatorId?: true
   clientId?: true
 }
@@ -106,6 +121,9 @@ export type EventCountAggregateInputType = {
   color?: true
   createdAt?: true
   updatedAt?: true
+  recurrenceRule?: true
+  recurrenceEndAt?: true
+  parentId?: true
   creatorId?: true
   clientId?: true
   _all?: true
@@ -193,6 +211,9 @@ export type EventGroupByOutputType = {
   color: string
   createdAt: Date
   updatedAt: Date
+  recurrenceRule: string | null
+  recurrenceEndAt: Date | null
+  parentId: string | null
   creatorId: string
   clientId: string | null
   _count: EventCountAggregateOutputType | null
@@ -228,6 +249,9 @@ export type EventWhereInput = {
   color?: Prisma.StringFilter<"Event"> | string
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
+  recurrenceRule?: Prisma.StringNullableFilter<"Event"> | string | null
+  recurrenceEndAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
+  parentId?: Prisma.StringNullableFilter<"Event"> | string | null
   creatorId?: Prisma.StringFilter<"Event"> | string
   clientId?: Prisma.StringNullableFilter<"Event"> | string | null
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -246,6 +270,9 @@ export type EventOrderByWithRelationInput = {
   color?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  recurrenceRule?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceEndAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   creator?: Prisma.UserOrderByWithRelationInput
@@ -267,6 +294,9 @@ export type EventWhereUniqueInput = Prisma.AtLeast<{
   color?: Prisma.StringFilter<"Event"> | string
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
+  recurrenceRule?: Prisma.StringNullableFilter<"Event"> | string | null
+  recurrenceEndAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
+  parentId?: Prisma.StringNullableFilter<"Event"> | string | null
   creatorId?: Prisma.StringFilter<"Event"> | string
   clientId?: Prisma.StringNullableFilter<"Event"> | string | null
   creator?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -285,6 +315,9 @@ export type EventOrderByWithAggregationInput = {
   color?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  recurrenceRule?: Prisma.SortOrderInput | Prisma.SortOrder
+  recurrenceEndAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  parentId?: Prisma.SortOrderInput | Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EventCountOrderByAggregateInput
@@ -305,6 +338,9 @@ export type EventScalarWhereWithAggregatesInput = {
   color?: Prisma.StringWithAggregatesFilter<"Event"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Event"> | Date | string
+  recurrenceRule?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
+  recurrenceEndAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Event"> | Date | string | null
+  parentId?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
   creatorId?: Prisma.StringWithAggregatesFilter<"Event"> | string
   clientId?: Prisma.StringNullableWithAggregatesFilter<"Event"> | string | null
 }
@@ -319,6 +355,9 @@ export type EventCreateInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creator: Prisma.UserCreateNestedOneWithoutEventsCreatedInput
   client?: Prisma.ClientCreateNestedOneWithoutEventsInput
   attendees?: Prisma.EventAttendeeCreateNestedManyWithoutEventInput
@@ -335,6 +374,9 @@ export type EventUncheckedCreateInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creatorId: string
   clientId?: string | null
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
@@ -351,6 +393,9 @@ export type EventUpdateInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creator?: Prisma.UserUpdateOneRequiredWithoutEventsCreatedNestedInput
   client?: Prisma.ClientUpdateOneWithoutEventsNestedInput
   attendees?: Prisma.EventAttendeeUpdateManyWithoutEventNestedInput
@@ -367,6 +412,9 @@ export type EventUncheckedUpdateInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
@@ -383,6 +431,9 @@ export type EventCreateManyInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creatorId: string
   clientId?: string | null
 }
@@ -397,6 +448,9 @@ export type EventUpdateManyMutationInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type EventUncheckedUpdateManyInput = {
@@ -409,6 +463,9 @@ export type EventUncheckedUpdateManyInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
@@ -433,6 +490,9 @@ export type EventCountOrderByAggregateInput = {
   color?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  recurrenceRule?: Prisma.SortOrder
+  recurrenceEndAt?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
 }
@@ -447,6 +507,9 @@ export type EventMaxOrderByAggregateInput = {
   color?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  recurrenceRule?: Prisma.SortOrder
+  recurrenceEndAt?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
 }
@@ -461,6 +524,9 @@ export type EventMinOrderByAggregateInput = {
   color?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  recurrenceRule?: Prisma.SortOrder
+  recurrenceEndAt?: Prisma.SortOrder
+  parentId?: Prisma.SortOrder
   creatorId?: Prisma.SortOrder
   clientId?: Prisma.SortOrder
 }
@@ -510,6 +576,10 @@ export type EventUncheckedUpdateManyWithoutCreatorNestedInput = {
   update?: Prisma.EventUpdateWithWhereUniqueWithoutCreatorInput | Prisma.EventUpdateWithWhereUniqueWithoutCreatorInput[]
   updateMany?: Prisma.EventUpdateManyWithWhereWithoutCreatorInput | Prisma.EventUpdateManyWithWhereWithoutCreatorInput[]
   deleteMany?: Prisma.EventScalarWhereInput | Prisma.EventScalarWhereInput[]
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type EventCreateNestedOneWithoutAttendeesInput = {
@@ -592,6 +662,9 @@ export type EventCreateWithoutCreatorInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   client?: Prisma.ClientCreateNestedOneWithoutEventsInput
   attendees?: Prisma.EventAttendeeCreateNestedManyWithoutEventInput
   tags?: Prisma.EventTagCreateNestedManyWithoutEventInput
@@ -607,6 +680,9 @@ export type EventUncheckedCreateWithoutCreatorInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   clientId?: string | null
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
   tags?: Prisma.EventTagUncheckedCreateNestedManyWithoutEventInput
@@ -650,6 +726,9 @@ export type EventScalarWhereInput = {
   color?: Prisma.StringFilter<"Event"> | string
   createdAt?: Prisma.DateTimeFilter<"Event"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Event"> | Date | string
+  recurrenceRule?: Prisma.StringNullableFilter<"Event"> | string | null
+  recurrenceEndAt?: Prisma.DateTimeNullableFilter<"Event"> | Date | string | null
+  parentId?: Prisma.StringNullableFilter<"Event"> | string | null
   creatorId?: Prisma.StringFilter<"Event"> | string
   clientId?: Prisma.StringNullableFilter<"Event"> | string | null
 }
@@ -664,6 +743,9 @@ export type EventCreateWithoutAttendeesInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creator: Prisma.UserCreateNestedOneWithoutEventsCreatedInput
   client?: Prisma.ClientCreateNestedOneWithoutEventsInput
   tags?: Prisma.EventTagCreateNestedManyWithoutEventInput
@@ -679,6 +761,9 @@ export type EventUncheckedCreateWithoutAttendeesInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creatorId: string
   clientId?: string | null
   tags?: Prisma.EventTagUncheckedCreateNestedManyWithoutEventInput
@@ -710,6 +795,9 @@ export type EventUpdateWithoutAttendeesInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creator?: Prisma.UserUpdateOneRequiredWithoutEventsCreatedNestedInput
   client?: Prisma.ClientUpdateOneWithoutEventsNestedInput
   tags?: Prisma.EventTagUpdateManyWithoutEventNestedInput
@@ -725,6 +813,9 @@ export type EventUncheckedUpdateWithoutAttendeesInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tags?: Prisma.EventTagUncheckedUpdateManyWithoutEventNestedInput
@@ -740,6 +831,9 @@ export type EventCreateWithoutTagsInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creator: Prisma.UserCreateNestedOneWithoutEventsCreatedInput
   client?: Prisma.ClientCreateNestedOneWithoutEventsInput
   attendees?: Prisma.EventAttendeeCreateNestedManyWithoutEventInput
@@ -755,6 +849,9 @@ export type EventUncheckedCreateWithoutTagsInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creatorId: string
   clientId?: string | null
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
@@ -786,6 +883,9 @@ export type EventUpdateWithoutTagsInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creator?: Prisma.UserUpdateOneRequiredWithoutEventsCreatedNestedInput
   client?: Prisma.ClientUpdateOneWithoutEventsNestedInput
   attendees?: Prisma.EventAttendeeUpdateManyWithoutEventNestedInput
@@ -801,6 +901,9 @@ export type EventUncheckedUpdateWithoutTagsInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
@@ -816,6 +919,9 @@ export type EventCreateWithoutClientInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creator: Prisma.UserCreateNestedOneWithoutEventsCreatedInput
   attendees?: Prisma.EventAttendeeCreateNestedManyWithoutEventInput
   tags?: Prisma.EventTagCreateNestedManyWithoutEventInput
@@ -831,6 +937,9 @@ export type EventUncheckedCreateWithoutClientInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creatorId: string
   attendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutEventInput
   tags?: Prisma.EventTagUncheckedCreateNestedManyWithoutEventInput
@@ -871,6 +980,9 @@ export type EventCreateManyCreatorInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   clientId?: string | null
 }
 
@@ -884,6 +996,9 @@ export type EventUpdateWithoutCreatorInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   client?: Prisma.ClientUpdateOneWithoutEventsNestedInput
   attendees?: Prisma.EventAttendeeUpdateManyWithoutEventNestedInput
   tags?: Prisma.EventTagUpdateManyWithoutEventNestedInput
@@ -899,6 +1014,9 @@ export type EventUncheckedUpdateWithoutCreatorInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
   tags?: Prisma.EventTagUncheckedUpdateManyWithoutEventNestedInput
@@ -914,6 +1032,9 @@ export type EventUncheckedUpdateManyWithoutCreatorInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -927,6 +1048,9 @@ export type EventCreateManyClientInput = {
   color?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  recurrenceRule?: string | null
+  recurrenceEndAt?: Date | string | null
+  parentId?: string | null
   creatorId: string
 }
 
@@ -940,6 +1064,9 @@ export type EventUpdateWithoutClientInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creator?: Prisma.UserUpdateOneRequiredWithoutEventsCreatedNestedInput
   attendees?: Prisma.EventAttendeeUpdateManyWithoutEventNestedInput
   tags?: Prisma.EventTagUpdateManyWithoutEventNestedInput
@@ -955,6 +1082,9 @@ export type EventUncheckedUpdateWithoutClientInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
   attendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutEventNestedInput
   tags?: Prisma.EventTagUncheckedUpdateManyWithoutEventNestedInput
@@ -970,6 +1100,9 @@ export type EventUncheckedUpdateManyWithoutClientInput = {
   color?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  recurrenceRule?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  recurrenceEndAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  parentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   creatorId?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
@@ -1023,6 +1156,9 @@ export type EventSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   color?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  recurrenceRule?: boolean
+  recurrenceEndAt?: boolean
+  parentId?: boolean
   creatorId?: boolean
   clientId?: boolean
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1042,6 +1178,9 @@ export type EventSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   color?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  recurrenceRule?: boolean
+  recurrenceEndAt?: boolean
+  parentId?: boolean
   creatorId?: boolean
   clientId?: boolean
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1058,6 +1197,9 @@ export type EventSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   color?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  recurrenceRule?: boolean
+  recurrenceEndAt?: boolean
+  parentId?: boolean
   creatorId?: boolean
   clientId?: boolean
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1074,11 +1216,14 @@ export type EventSelectScalar = {
   color?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  recurrenceRule?: boolean
+  recurrenceEndAt?: boolean
+  parentId?: boolean
   creatorId?: boolean
   clientId?: boolean
 }
 
-export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "startAt" | "endAt" | "allDay" | "color" | "createdAt" | "updatedAt" | "creatorId" | "clientId", ExtArgs["result"]["event"]>
+export type EventOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "startAt" | "endAt" | "allDay" | "color" | "createdAt" | "updatedAt" | "recurrenceRule" | "recurrenceEndAt" | "parentId" | "creatorId" | "clientId", ExtArgs["result"]["event"]>
 export type EventInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   creator?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.Event$clientArgs<ExtArgs>
@@ -1113,6 +1258,9 @@ export type $EventPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     color: string
     createdAt: Date
     updatedAt: Date
+    recurrenceRule: string | null
+    recurrenceEndAt: Date | null
+    parentId: string | null
     creatorId: string
     clientId: string | null
   }, ExtArgs["result"]["event"]>
@@ -1551,6 +1699,9 @@ export interface EventFieldRefs {
   readonly color: Prisma.FieldRef<"Event", 'String'>
   readonly createdAt: Prisma.FieldRef<"Event", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Event", 'DateTime'>
+  readonly recurrenceRule: Prisma.FieldRef<"Event", 'String'>
+  readonly recurrenceEndAt: Prisma.FieldRef<"Event", 'DateTime'>
+  readonly parentId: Prisma.FieldRef<"Event", 'String'>
   readonly creatorId: Prisma.FieldRef<"Event", 'String'>
   readonly clientId: Prisma.FieldRef<"Event", 'String'>
 }

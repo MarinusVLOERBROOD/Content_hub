@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { createEvent, updateEvent, deleteEvent } from "@/actions/events";
 import { format } from "date-fns";
-import { Trash2 } from "lucide-react";
+import { Trash2, RefreshCw } from "lucide-react";
 
 interface User {
   id: string;
@@ -29,6 +29,8 @@ interface EventData {
   color: string;
   clientId?: string | null;
   attendees?: { user: User }[];
+  recurrenceRule?: string | null;
+  parentId?: string | null;
 }
 
 interface EventModalProps {
@@ -40,7 +42,6 @@ interface EventModalProps {
   clients: ClientItem[];
   currentUserId: string;
 }
-
 
 function formatDateTimeLocal(d: Date) {
   return format(d, "yyyy-MM-dd'T'HH:mm");
@@ -56,6 +57,8 @@ export function EventModal({
   currentUserId,
 }: EventModalProps) {
   const isEdit = !!event?.id;
+  const isRecurring = !!(event?.recurrenceRule);
+
   const defaultStart = event?.startAt ? new Date(event.startAt) : (defaultDate ?? new Date());
   const defaultEnd = event?.endAt ? new Date(event.endAt) : new Date((defaultDate ?? new Date()).getTime() + 3600000);
 
@@ -68,6 +71,8 @@ export function EventModal({
   const [attendeeIds, setAttendeeIds] = useState<string[]>(
     event?.attendees?.map((a) => a.user.id) ?? [currentUserId]
   );
+  const [recurrenceRule, setRecurrenceRule] = useState("");
+  const [recurrenceEndAt, setRecurrenceEndAt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
@@ -91,6 +96,8 @@ export function EventModal({
         allDay,
         clientId: clientId || null,
         attendeeIds,
+        recurrenceRule: recurrenceRule || null,
+        recurrenceEndAt: recurrenceEndAt ? new Date(recurrenceEndAt).toISOString() : null,
       };
       const result = isEdit
         ? await updateEvent({ id: event!.id!, ...data })
@@ -102,9 +109,9 @@ export function EventModal({
     });
   }
 
-  function handleDelete() {
+  function handleDelete(scope: "one" | "all") {
     startTransition(async () => {
-      if (event?.id) await deleteEvent(event.id);
+      if (event?.id) await deleteEvent(event.id, scope);
       onClose();
     });
   }
@@ -165,7 +172,6 @@ export function EventModal({
               onChange={(e) => {
                 const newStart = e.target.value;
                 setStartAt(newStart);
-                // Shift end time to maintain same duration
                 const oldDuration = new Date(endAt).getTime() - new Date(startAt).getTime();
                 const newEnd = new Date(new Date(newStart).getTime() + Math.max(oldDuration, 3600000));
                 setEndAt(formatDateTimeLocal(newEnd));
@@ -196,6 +202,39 @@ export function EventModal({
           </div>
         )}
 
+        {/* Recurrence — only in create mode */}
+        {!isEdit && (
+          <div className="grid grid-cols-2 gap-3">
+            <Select
+              label="Herhaling"
+              value={recurrenceRule}
+              onChange={(e) => setRecurrenceRule(e.target.value)}
+              options={[
+                { value: "", label: "Geen herhaling" },
+                { value: "daily", label: "Dagelijks" },
+                { value: "weekly", label: "Wekelijks" },
+                { value: "monthly", label: "Maandelijks" },
+              ]}
+            />
+            {recurrenceRule && (
+              <Input
+                label="Herhaling t/m"
+                type="date"
+                value={recurrenceEndAt}
+                onChange={(e) => setRecurrenceEndAt(e.target.value)}
+              />
+            )}
+          </div>
+        )}
+
+        {/* Badge when editing a recurring event */}
+        {isEdit && isRecurring && (
+          <div className="flex items-center gap-1.5 text-xs text-teal-700 bg-teal-50 border border-teal-200 rounded-lg px-3 py-2">
+            <RefreshCw size={12} />
+            Herhalende afspraak ({event.recurrenceRule === "daily" ? "dagelijks" : event.recurrenceRule === "weekly" ? "wekelijks" : "maandelijks"})
+          </div>
+        )}
+
         {/* Attendees */}
         {users.length > 1 && (
           <div>
@@ -222,15 +261,47 @@ export function EventModal({
         {error && <p className="text-sm text-red-500 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
 
         <div className="flex items-center justify-between pt-2">
-          {isEdit && (
+          {isEdit && !deleteConfirm && (
             <button
               type="button"
-              onClick={() => (deleteConfirm ? handleDelete() : setDeleteConfirm(true))}
+              onClick={() => setDeleteConfirm(true)}
               className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700"
               disabled={isPending}
             >
               <Trash2 size={14} />
-              {deleteConfirm ? "Zeker?" : "Verwijderen"}
+              Verwijderen
+            </button>
+          )}
+          {isEdit && deleteConfirm && isRecurring && (
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-slate-500">Verwijder:</span>
+              <button
+                type="button"
+                onClick={() => handleDelete("one")}
+                className="text-sm text-red-500 hover:text-red-700 underline"
+                disabled={isPending}
+              >
+                Alleen deze
+              </button>
+              <button
+                type="button"
+                onClick={() => handleDelete("all")}
+                className="text-sm text-red-500 hover:text-red-700 underline"
+                disabled={isPending}
+              >
+                Alle herhalingen
+              </button>
+            </div>
+          )}
+          {isEdit && deleteConfirm && !isRecurring && (
+            <button
+              type="button"
+              onClick={() => handleDelete("one")}
+              className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700"
+              disabled={isPending}
+            >
+              <Trash2 size={14} />
+              Zeker?
             </button>
           )}
           <div className={`flex gap-3 ${!isEdit ? "ml-auto" : ""}`}>

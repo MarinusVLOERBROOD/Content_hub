@@ -46,6 +46,10 @@ model Event {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  recurrenceRule  String?
+  recurrenceEndAt DateTime?
+  parentId        String?
+
   creatorId String
   creator   User            @relation("EventCreator", fields: [creatorId], references: [id])
   clientId  String?
@@ -84,6 +88,10 @@ model Task {
   position    Float     @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+
+  recurrenceRule  String?
+  recurrenceEndAt DateTime?
+  parentId        String?
 
   creatorId  String
   creator    User      @relation("TaskCreator", fields: [creatorId], references: [id])
