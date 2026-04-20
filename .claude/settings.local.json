@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p /c/laragon/www/de-leo-content-hub/src/components/layout)",
+      "Bash(mkdir -p /c/laragon/www/de-leo-content-hub/src/components/files)",
+      "Bash(mkdir -p /c/laragon/www/de-leo-content-hub/src/components/planning)",
+      "Bash(mkdir -p /c/laragon/www/de-leo-content-hub/src/components/tasks)",
+      "Bash(mkdir -p /c/laragon/www/de-leo-content-hub/src/app/files)",
+      "Bash(npx tsc:*)",
+      "Read(//c/Users/marin/.claude/projects/C--laragon-www-de-leo-content-hub/memory//**)",
+      "Read(//c/Users/marin/.claude/projects/C--laragon-www-de-leo-content-hub/memory/**)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(main\\\\\\)/page.tsx)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(main\\\\\\)/agenda/page.tsx)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(main\\\\\\)/bestanden/page.tsx)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(main\\\\\\)/delen/page.tsx)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(main\\\\\\)/instellingen/page.tsx)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(public\\\\\\)/login/page.tsx)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(public\\\\\\)/download/[token]/page.tsx)",
+      "Bash(cat -n c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(main\\\\\\)/layout.tsx)",
+      "Bash(ls c:/laragon/www/de-leo-content-hub/src/app/\\\\\\(main\\\\\\)/)",
+      "Bash(npx prisma:*)",
+      "Bash(npx tsx:*)",
+      "Bash(xargs cat *)"
+    ]
+  }
+}

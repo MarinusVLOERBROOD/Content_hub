@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ─── Auth ─────────────────────────────────────────────────────────────────────
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("user")
+  avatarPath   String?
+  jobTitle     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  color       String  @default("teal")
+  notifTasks  Boolean @default(true)
+  notifShare  Boolean @default(true)
+  notifAgenda Boolean @default(false)
+
+  eventsCreated     Event[]         @relation("EventCreator")
+  eventAttendees    EventAttendee[]
+  tasksCreated      Task[]          @relation("TaskCreator")
+  tasksAssigned     Task[]          @relation("TaskAssignee")
+  shareLinksCreated ShareLink[]
+  fileUploads       File[]
+}
+
+// ─── Calendar / Agenda ────────────────────────────────────────────────────────
+
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  startAt     DateTime
+  endAt       DateTime
+  allDay      Boolean  @default(false)
+  color       String   @default("teal")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  creatorId String
+  creator   User            @relation("EventCreator", fields: [creatorId], references: [id])
+  clientId  String?
+  client    Client?         @relation(fields: [clientId], references: [id])
+  attendees EventAttendee[]
+  tags      EventTag[]
+}
+
+model EventAttendee {
+  id      String @id @default(cuid())
+  eventId String
+  userId  String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+}
+
+model EventTag {
+  id      String @id @default(cuid())
+  name    String
+  color   String @default("slate")
+  eventId String
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+// ─── Tasks / Kanban ───────────────────────────────────────────────────────────
+
+model Task {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  status      String    @default("todo")
+  priority    String    @default("medium")
+  dueAt       DateTime?
+  position    Float     @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  creatorId  String
+  creator    User      @relation("TaskCreator", fields: [creatorId], references: [id])
+  assigneeId String?
+  assignee   User?     @relation("TaskAssignee", fields: [assigneeId], references: [id])
+  clientId   String?
+  client     Client?   @relation(fields: [clientId], references: [id])
+
+  tags TaskTag[]
+}
+
+model TaskTag {
+  id     String @id @default(cuid())
+  name   String
+  color  String @default("slate")
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+// ─── File Management ──────────────────────────────────────────────────────────
+
+model Client {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  files          File[]
+  shareLinkFiles ShareLinkFile[]
+  tasks          Task[]
+  events         Event[]
+}
+
+model File {
+  id           String   @id @default(cuid())
+  name         String
+  originalName String
+  mimeType     String
+  size         Int
+  relativePath String
+  uploadedAt   DateTime @default(now())
+
+  clientId     String
+  client       Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  uploadedById String
+  uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+  shareLinks ShareLinkFile[]
+
+  @@unique([clientId, relativePath])
+}
+
+// ─── File Sharing ─────────────────────────────────────────────────────────────
+
+model ShareLink {
+  id         String    @id @default(cuid())
+  token      String    @unique
+  message    String?
+  recipients String
+  expiresAt  DateTime
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  files     ShareLinkFile[]
+  downloads ShareLinkDownload[]
+}
+
+model ShareLinkFile {
+  id          String @id @default(cuid())
+  shareLinkId String
+  fileId      String
+  clientId    String
+
+  shareLink ShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
+  file      File      @relation(fields: [fileId], references: [id])
+  client    Client    @relation(fields: [clientId], references: [id])
+
+  @@unique([shareLinkId, fileId])
+}
+
+model ShareLinkDownload {
+  id           String   @id @default(cuid())
+  shareLinkId  String
+  downloadedAt DateTime @default(now())
+  ipAddress    String?
+  userAgent    String?
+
+  shareLink ShareLink @relation(fields: [shareLinkId], references: [id], onDelete: Cascade)
+}
+
+// ─── App Settings ─────────────────────────────────────────────────────────────
+
+model AppSetting {
+  key   String @id
+  value String
+}
