@@ -21,7 +21,9 @@
       "Bash(npx prisma:*)",
       "Bash(npx tsx:*)",
       "Bash(xargs cat *)",
-      "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"Ja\" npx prisma migrate reset --force)"
+      "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"Ja\" npx prisma migrate reset --force)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }

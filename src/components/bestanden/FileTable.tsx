@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import {
   FileText,
   Image,
@@ -52,6 +53,25 @@ export function FileTable({ files, searchQuery }: FileTableProps) {
   const [renameFileItem, setRenameFileItem] = useState<FileItem | null>(null);
   const [newName, setNewName] = useState("");
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
+  const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
+  const menuButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handleClick() { setMenuOpen(null); }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [menuOpen]);
+
+  function openMenu(fileId: string) {
+    if (menuOpen === fileId) { setMenuOpen(null); return; }
+    const btn = menuButtonRefs.current[fileId];
+    if (btn) {
+      const rect = btn.getBoundingClientRect();
+      setMenuPos({ top: rect.bottom + 4, right: window.innerWidth - rect.right });
+    }
+    setMenuOpen(fileId);
+  }
 
   const filtered = files.filter((f) =>
     f.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -77,7 +97,7 @@ export function FileTable({ files, searchQuery }: FileTableProps) {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-100 overflow-x-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50">
@@ -121,36 +141,14 @@ export function FileTable({ files, searchQuery }: FileTableProps) {
                     >
                       <Eye size={14} />
                     </button>
-                    <div className="relative">
+                    <div>
                       <button
-                        onClick={() => setMenuOpen(menuOpen === file.id ? null : file.id)}
+                        ref={(el) => { menuButtonRefs.current[file.id] = el; }}
+                        onClick={() => openMenu(file.id)}
                         className="p-1.5 rounded hover:bg-slate-100 text-slate-400"
                       >
                         <MoreHorizontal size={14} />
                       </button>
-                      {menuOpen === file.id && (
-                        <div className="absolute right-0 top-full mt-1 bg-white border border-slate-100 rounded-lg shadow-lg py-1 z-10 w-36">
-                          <button
-                            onClick={() => {
-                              setNewName(file.name);
-                              setRenameFileItem(file);
-                              setMenuOpen(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 w-full"
-                          >
-                            <Pencil size={12} /> Hernoemen
-                          </button>
-                          <button
-                            onClick={() => {
-                              setDeleteFile(file);
-                              setMenuOpen(null);
-                            }}
-                            className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
-                          >
-                            <Trash2 size={12} /> Verwijderen
-                          </button>
-                        </div>
-                      )}
                     </div>
                   </div>
                 </td>
@@ -159,6 +157,37 @@ export function FileTable({ files, searchQuery }: FileTableProps) {
           </tbody>
         </table>
       </div>
+
+      {menuOpen && menuPos && createPortal(
+        <div
+          className="fixed z-[9999] bg-white border border-slate-100 rounded-lg shadow-lg py-1 w-36"
+          style={{ top: menuPos.top, right: menuPos.right }}
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => {
+              const file = files.find((f) => f.id === menuOpen)!;
+              setNewName(file.name);
+              setRenameFileItem(file);
+              setMenuOpen(null);
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 w-full"
+          >
+            <Pencil size={12} /> Hernoemen
+          </button>
+          <button
+            onClick={() => {
+              const file = files.find((f) => f.id === menuOpen)!;
+              setDeleteFile(file);
+              setMenuOpen(null);
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50 w-full"
+          >
+            <Trash2 size={12} /> Verwijderen
+          </button>
+        </div>,
+        document.body
+      )}
 
       {/* Rename dialog */}
       {renameFileItem && (

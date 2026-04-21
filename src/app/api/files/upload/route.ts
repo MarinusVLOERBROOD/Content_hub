@@ -73,9 +73,15 @@ export async function POST(req: Request) {
 
   const folderPath = sanitizeFolderPath(rawFolderPath);
 
-  const client = await db.client.findUnique({ where: { slug: clientSlug } });
+  const [client, user] = await Promise.all([
+    db.client.findUnique({ where: { slug: clientSlug } }),
+    db.user.findUnique({ where: { id: session.userId } }),
+  ]);
   if (!client) {
     return NextResponse.json({ error: "Klant niet gevonden" }, { status: 404 });
+  }
+  if (!user) {
+    return NextResponse.json({ error: "Gebruiker niet gevonden" }, { status: 401 });
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
