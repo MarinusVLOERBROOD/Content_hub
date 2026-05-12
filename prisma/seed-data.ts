@@ -1,5 +1,5 @@
 /**
- * Test data for April 2026.
+ * Generates demo data relative to today's date.
  * Run with: npx tsx prisma/seed-data.ts
  *
  * Uses the existing users from seed.ts — does NOT delete users or clients.
@@ -13,8 +13,11 @@ const dbPath = path.resolve(process.cwd(), "content-hub.db");
 const adapter = new PrismaBetterSqlite3({ url: dbPath });
 const db = new PrismaClient({ adapter });
 
-function d(day: number, hour = 9, minute = 0) {
-  return new Date(2026, 3, day, hour, minute); // month 3 = April (0-indexed)
+function rel(offsetDays: number, hour = 9, minute = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + offsetDays);
+  d.setHours(hour, minute, 0, 0);
+  return d;
 }
 
 async function main() {
@@ -59,110 +62,110 @@ async function main() {
 
   // ── Afspraken aanmaken ──────────────────────────────────────────────────────
   const events = [
-    // Verleden afspraken (apr 1–18)
+    // Verleden afspraken
     {
-      title: "Kick-off planning april",
+      title: "Kick-off planning",
       description: "Maandplanning en taakverdeling bespreken",
-      startAt: d(1, 9), endAt: d(1, 10),
+      startAt: rel(-21, 9), endAt: rel(-21, 10),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
     {
       title: "Fotoshoot Sportschool Flex",
       description: "Sportfoto's voor social media en website",
-      startAt: d(3, 10), endAt: d(3, 12),
+      startAt: rel(-18, 10), endAt: rel(-18, 12),
       clientId: flex.id, creatorId: marinus?.id ?? admin.id,
       attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
     },
     {
       title: "Review sociale media Bakkerij De Zon",
       description: "Resultaten vorige maand doornemen en bijsturen",
-      startAt: d(6, 14), endAt: d(6, 15),
+      startAt: rel(-15, 14), endAt: rel(-15, 15),
       clientId: zon.id, creatorId: admin.id,
       attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
     },
     {
       title: "Contentbespreking Tandarts Vermeer",
-      description: "Nieuwe contentstrategie voor Q2 bespreken",
-      startAt: d(8, 9), endAt: d(8, 10, 30),
+      description: "Nieuwe contentstrategie voor komend kwartaal bespreken",
+      startAt: rel(-13, 9), endAt: rel(-13, 10, 30),
       clientId: tand.id, creatorId: admin.id,
       attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
     },
     {
       title: "Videocall campagne-ideeën Restaurant Bella",
       description: "Brainstorm zomercampagne en promotiemateriaal",
-      startAt: d(10, 11), endAt: d(10, 12),
+      startAt: rel(-11, 11), endAt: rel(-11, 12),
       clientId: bella.id, creatorId: admin.id,
       attendeeIds: [admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
     },
     {
-      title: "Social media planning rest april",
-      description: "Content kalender afronden voor de tweede helft van april",
-      startAt: d(14, 9), endAt: d(14, 10, 30),
+      title: "Social media planning update",
+      description: "Content kalender afronden voor de komende twee weken",
+      startAt: rel(-7, 9), endAt: rel(-7, 10, 30),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
     {
       title: "Videoshoot Bakkerij De Zon",
       description: "Productievideo's voor Instagram Reels en TikTok",
-      startAt: d(17, 13), endAt: d(17, 16),
+      startAt: rel(-4, 13), endAt: rel(-4, 16),
       clientId: zon.id, creatorId: marinus?.id ?? admin.id,
       attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
     },
     {
       title: "SEO-check Tandarts Vermeer",
       description: "Technische SEO doorlichten en verbeterpunten noteren",
-      startAt: d(18, 10), endAt: d(18, 11),
+      startAt: rel(-3, 10), endAt: rel(-3, 11),
       clientId: tand.id, creatorId: marinus?.id ?? admin.id,
       attendeeIds: [marinus?.id ?? admin.id].filter(Boolean) as string[],
     },
-    // Komende afspraken (apr 21–30)
+    // Komende afspraken
     {
       title: "Wekelijks teamoverleg",
       description: "Voortgang bespreken en obstakels oplossen",
-      startAt: d(21, 9), endAt: d(21, 10),
+      startAt: rel(2, 9), endAt: rel(2, 10),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
     {
       title: "Presentatie nieuwe campagne Sportschool Flex",
       description: "Zomercampagne presenteren aan de klant",
-      startAt: d(22, 14), endAt: d(22, 15, 30),
+      startAt: rel(3, 14), endAt: rel(3, 15, 30),
       clientId: flex.id, creatorId: admin.id,
       attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
     },
     {
       title: "Fotobeoordeling Bakkerij De Zon",
       description: "Bewerkte foto's beoordelen en selectie maken",
-      startAt: d(24, 10), endAt: d(24, 12),
+      startAt: rel(5, 10), endAt: rel(5, 12),
       clientId: zon.id, creatorId: admin.id,
       attendeeIds: [admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
     },
     {
       title: "Contentcheck Restaurant Bella",
       description: "Advertentieteksten en beelden voor zomercampagne reviewen",
-      startAt: d(25, 9), endAt: d(25, 10),
+      startAt: rel(6, 9), endAt: rel(6, 10),
       clientId: bella.id, creatorId: marinus?.id ?? admin.id,
       attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
     },
     {
       title: "Google Ads evaluatie Tandarts Vermeer",
       description: "Campagneprestaties bespreken en budget heralloceren",
-      startAt: d(28, 11), endAt: d(28, 12),
+      startAt: rel(9, 11), endAt: rel(9, 12),
       clientId: tand.id, creatorId: admin.id,
       attendeeIds: [admin.id],
     },
     {
-      title: "Planning mei brainstorm",
-      description: "Ideeën verzamelen voor content en campagnes in mei",
-      startAt: d(29, 13), endAt: d(29, 14),
+      title: "Planning volgende periode brainstorm",
+      description: "Ideeën verzamelen voor content en campagnes",
+      startAt: rel(10, 13), endAt: rel(10, 14),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
     {
-      title: "Maandafsluiting april",
+      title: "Maandafsluiting en rapportage",
       description: "Resultaten bespreken, facturen controleren en archiveren",
-      startAt: d(30, 15), endAt: d(30, 16),
+      startAt: rel(14, 15), endAt: rel(14, 16),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
@@ -186,22 +189,22 @@ async function main() {
   // ── Taken aanmaken ──────────────────────────────────────────────────────────
   const tasks = [
     // Hoge prioriteit
-    { title: "Reels maken voor Bakkerij De Zon", priority: "high", status: "todo", dueAt: d(25), clientId: zon.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
-    { title: "Advertentieteksten Restaurant Bella schrijven", priority: "high", status: "doing", dueAt: d(22), clientId: bella.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 1000 },
-    { title: "Website content update Tandarts Vermeer", priority: "high", status: "review", dueAt: d(21), clientId: tand.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
+    { title: "Reels maken voor Bakkerij De Zon", priority: "high", status: "todo", dueAt: rel(6), clientId: zon.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
+    { title: "Advertentieteksten Restaurant Bella schrijven", priority: "high", status: "doing", dueAt: rel(3), clientId: bella.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 1000 },
+    { title: "Website content update Tandarts Vermeer", priority: "high", status: "review", dueAt: rel(2), clientId: tand.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
     // Middel prioriteit
-    { title: "Campagneplan mei opstellen Sportschool Flex", priority: "medium", status: "todo", dueAt: d(28), clientId: flex.id, assigneeId: admin.id, creatorId: admin.id, position: 2000 },
-    { title: "Foto's bewerken Bakkerij De Zon fotoshoot", priority: "medium", status: "doing", dueAt: d(23), clientId: zon.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
-    { title: "Maandrapport april opmaken", priority: "medium", status: "todo", dueAt: d(30), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 3000 },
-    { title: "E-mailcampagne Restaurant Bella opzetten", priority: "medium", status: "todo", dueAt: d(27), clientId: bella.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 4000 },
-    { title: "Pinterest-strategie Sportschool Flex", priority: "medium", status: "review", dueAt: d(24), clientId: flex.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
-    { title: "Sociale media statistieken rapportage", priority: "medium", status: "review", dueAt: d(22), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 3000 },
+    { title: "Campagneplan volgende maand opstellen Sportschool Flex", priority: "medium", status: "todo", dueAt: rel(9), clientId: flex.id, assigneeId: admin.id, creatorId: admin.id, position: 2000 },
+    { title: "Foto's bewerken Bakkerij De Zon fotoshoot", priority: "medium", status: "doing", dueAt: rel(4), clientId: zon.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
+    { title: "Maandrapport opmaken", priority: "medium", status: "todo", dueAt: rel(14), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 3000 },
+    { title: "E-mailcampagne Restaurant Bella opzetten", priority: "medium", status: "todo", dueAt: rel(8), clientId: bella.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 4000 },
+    { title: "Pinterest-strategie Sportschool Flex", priority: "medium", status: "review", dueAt: rel(5), clientId: flex.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
+    { title: "Sociale media statistieken rapportage", priority: "medium", status: "review", dueAt: rel(3), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 3000 },
     // Lage prioriteit
-    { title: "Blog artikel Bakkerij De Zon", priority: "low", status: "todo", dueAt: d(29), clientId: zon.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 5000 },
+    { title: "Blog artikel Bakkerij De Zon", priority: "low", status: "todo", dueAt: rel(10), clientId: zon.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 5000 },
     { title: "Google My Business foto's Tandarts Vermeer", priority: "low", status: "done", dueAt: null, clientId: tand.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
     { title: "Stockfoto's archiveren", priority: "low", status: "done", dueAt: null, clientId: null, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
-    { title: "LinkedIn posts Sportschool Flex plannen", priority: "low", status: "doing", dueAt: d(26), clientId: flex.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 3000 },
-    { title: "Offertesjabloon bijwerken", priority: "low", status: "todo", dueAt: d(30), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 6000 },
+    { title: "LinkedIn posts Sportschool Flex plannen", priority: "low", status: "doing", dueAt: rel(7), clientId: flex.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 3000 },
+    { title: "Offertesjabloon bijwerken", priority: "low", status: "todo", dueAt: rel(14), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 6000 },
     { title: "Hashtag-onderzoek Restaurant Bella", priority: "low", status: "done", dueAt: null, clientId: bella.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 3000 },
   ];
 
@@ -213,7 +216,7 @@ async function main() {
   }
   console.log(`✅ ${tasks.length} taken aangemaakt`);
 
-  console.log("\n🎉 Testdata klaar voor april 2026!");
+  console.log("\n🎉 Demo data klaar!");
   console.log("   Klanten:", Object.values(clients).map((c) => c.name).join(", "));
 }
 

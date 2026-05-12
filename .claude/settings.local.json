@@ -23,7 +23,13 @@
       "Bash(xargs cat *)",
       "Bash(PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=\"Ja\" npx prisma migrate reset --force)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" -Force)",
+      "Bash(Select-Object Name, Mode)",
+      "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" status)",
+      "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" diff --stat)",
+      "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" log --oneline -5)",
+      "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" check-ignore -v .claude/settings.local.json)"
     ]
   }
 }
