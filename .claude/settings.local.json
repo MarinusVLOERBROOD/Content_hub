@@ -29,7 +29,18 @@
       "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" status)",
       "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" diff --stat)",
       "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" log --oneline -5)",
-      "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" check-ignore -v .claude/settings.local.json)"
+      "Bash(git -C \"c:\\\\laragon\\\\www\\\\de-leo-content-hub\" check-ignore -v .claude/settings.local.json)",
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(cp \"C:/Users/marin/.claude/projects/c--laragon-www-de-leo-content-hub/b6f464d2-d926-46b8-9306-348291f4c7e4/tool-results/webfetch-1778587548496-m13gg6.bin\" /tmp/design.tar.gz)",
+      "Bash(cd /tmp)",
+      "Bash(tar -xzf design.tar.gz)",
+      "Bash(grep -v \"\\\\.tmp$\")",
+      "Bash(mkdir -p \"c:/laragon/www/de-leo-content-hub/public/fonts\" && cp /tmp/de-leo-media-design-system/project/fonts/*.ttf \"c:/laragon/www/de-leo-content-hub/public/fonts/\" && echo \"Fonts copied: $\\(ls c:/laragon/www/de-leo-content-hub/public/fonts/ | wc -l\\) files\")",
+      "Bash(npm run *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/login)"
+    ],
+    "additionalDirectories": [
+      "\\tmp\\de-leo-media-design-system\\project\\fonts"
     ]
   }
 }
