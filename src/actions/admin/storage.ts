@@ -203,7 +203,7 @@ export async function saveDropboxCredentials(data: {
     credentials: {
       appKey: data.appKey.trim(),
       appSecret: data.appSecret.trim(),
-      rootPath: data.rootPath?.trim() || "/De Leo Content Hub",
+      rootPath: data.rootPath?.trim() || "/De Leo Team Hub",
     } satisfies DropboxCredentials,
   };
 
@@ -252,7 +252,7 @@ export async function saveMegaCredentials(data: {
     credentials: {
       email: data.email.trim(),
       password: data.password, // will be encrypted at rest in config
-      rootFolderName: data.rootFolderName?.trim() || "De Leo Content Hub",
+      rootFolderName: data.rootFolderName?.trim() || "De Leo Team Hub",
     } satisfies MegaCredentials,
   };
 

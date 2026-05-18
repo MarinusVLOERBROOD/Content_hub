@@ -90,7 +90,7 @@ export interface OneDriveCredentials {
   accessToken?: string;
   refreshToken?: string;
   expiresAt?: number;
-  rootFolderPath?: string; // e.g. "root:/Content Hub:" — defaults to App root
+  rootFolderPath?: string; // e.g. "root:/Team Hub:" — defaults to App root
 }
 
 export interface DropboxCredentials {
@@ -99,13 +99,13 @@ export interface DropboxCredentials {
   accessToken?: string;
   refreshToken?: string;
   expiresAt?: number;
-  rootPath?: string; // e.g. "/Content Hub" — defaults to app root
+  rootPath?: string; // e.g. "/Team Hub" — defaults to app root
 }
 
 export interface MegaCredentials {
   email: string;
   password: string; // stored encrypted
-  rootFolderName?: string; // defaults to "De Leo Content Hub"
+  rootFolderName?: string; // defaults to "De Leo Team Hub"
 }
 
 export type ProviderCredentials =

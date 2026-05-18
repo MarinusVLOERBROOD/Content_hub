@@ -22,7 +22,7 @@ export default async function AdminDashboard() {
     <div className="p-6 max-w-4xl mx-auto">
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-slate-900">Beheer overzicht</h1>
-        <p className="text-sm text-slate-500 mt-1">Statistieken en beheer van de Content Hub</p>
+        <p className="text-sm text-slate-500 mt-1">Statistieken en beheer van de Team Hub</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4">

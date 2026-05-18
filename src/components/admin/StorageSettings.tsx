@@ -312,7 +312,7 @@ export function StorageSettings({
                         <FieldRow label="Client ID (Application ID)" id="od-cid" value={od.clientId} onChange={(v) => setOd({ ...od, clientId: v })} placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" required />
                         <FieldRow label="Client Secret" id="od-cs" value={od.clientSecret} onChange={(v) => setOd({ ...od, clientSecret: v })} type="password" required />
                         <FieldRow label="Tenant ID" id="od-tid" value={od.tenantId} onChange={(v) => setOd({ ...od, tenantId: v })} placeholder="common (persoonlijk) of je Azure tenant ID" hint="Gebruik 'common' voor persoonlijke Microsoft accounts" />
-                        <FieldRow label="Root map pad (optioneel)" id="od-rfp" value={od.rootFolderPath} onChange={(v) => setOd({ ...od, rootFolderPath: v })} placeholder="root:/De Leo Content Hub:" hint="OneDrive pad naar de root map" />
+                        <FieldRow label="Root map pad (optioneel)" id="od-rfp" value={od.rootFolderPath} onChange={(v) => setOd({ ...od, rootFolderPath: v })} placeholder="root:/De Leo Team Hub:" hint="OneDrive pad naar de root map" />
                       </div>
                       <SetupGuide href="https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps" label="Azure App Registrations">
                         Registreer een app, voeg redirect URI toe (type: Web):
@@ -334,7 +334,7 @@ export function StorageSettings({
                       <div className="space-y-3">
                         <FieldRow label="App Key" id="dbx-ak" value={db.appKey} onChange={(v) => setDb({ ...db, appKey: v })} required />
                         <FieldRow label="App Secret" id="dbx-as" value={db.appSecret} onChange={(v) => setDb({ ...db, appSecret: v })} type="password" required />
-                        <FieldRow label="Root map pad (optioneel)" id="dbx-rp" value={db.rootPath} onChange={(v) => setDb({ ...db, rootPath: v })} placeholder="/De Leo Content Hub" hint="Pad in Dropbox waar bestanden worden opgeslagen" />
+                        <FieldRow label="Root map pad (optioneel)" id="dbx-rp" value={db.rootPath} onChange={(v) => setDb({ ...db, rootPath: v })} placeholder="/De Leo Team Hub" hint="Pad in Dropbox waar bestanden worden opgeslagen" />
                       </div>
                       <SetupGuide href="https://www.dropbox.com/developers/apps" label="Dropbox App Console">
                         Maak een app aan (scoped access, Full Dropbox). Voeg redirect URI toe:
@@ -356,7 +356,7 @@ export function StorageSettings({
                       <div className="space-y-3">
                         <FieldRow label="MEGA e-mailadres" id="mega-email" value={mega.email} onChange={(v) => setMega({ ...mega, email: v })} type="email" required />
                         <FieldRow label="Wachtwoord" id="mega-pw" value={mega.password} onChange={(v) => setMega({ ...mega, password: v })} type="password" required />
-                        <FieldRow label="Root mapnaam (optioneel)" id="mega-rfn" value={mega.rootFolderName} onChange={(v) => setMega({ ...mega, rootFolderName: v })} placeholder="De Leo Content Hub" />
+                        <FieldRow label="Root mapnaam (optioneel)" id="mega-rfn" value={mega.rootFolderName} onChange={(v) => setMega({ ...mega, rootFolderName: v })} placeholder="De Leo Team Hub" />
                       </div>
                       <button onClick={handleMega} disabled={isPending || !mega.email || !mega.password} className="w-full px-4 py-2 bg-teal-600 text-white text-sm rounded-lg hover:bg-teal-700 disabled:opacity-40">
                         {isPending ? "Bezig..." : "Verbinden met MEGA"}

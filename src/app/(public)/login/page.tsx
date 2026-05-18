@@ -15,7 +15,7 @@ export default async function LoginPage() {
           <div className="w-9 h-9 bg-teal-700 rounded-lg flex items-center justify-center">
             <Share2 className="w-5 h-5 text-white" />
           </div>
-          <span className="text-xl font-bold text-slate-900">Content Hub</span>
+          <span className="text-xl font-bold text-slate-900">Team Hub</span>
         </div>
 
         {/* Card */}

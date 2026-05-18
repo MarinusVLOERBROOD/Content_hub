@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import {
   DndContext,
   DragEndEvent,
@@ -85,7 +85,7 @@ function DroppableColumn({ id, children }: { id: string; children: React.ReactNo
   return (
     <div
       ref={setNodeRef}
-      className={`flex-1 space-y-2 min-h-16 rounded-xl p-2 transition-colors ${
+      className={`flex-1 overflow-y-auto space-y-2 min-h-16 rounded-xl p-2 transition-colors ${
         isOver ? "bg-teal-50 ring-2 ring-teal-200" : "bg-slate-50"
       }`}
     >
@@ -175,9 +175,16 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
   const [editTask, setEditTask] = useState<Task | null>(null);
   const [createStatus, setCreateStatus] = useState<string | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-  const [filterAssignee, setFilterAssignee] = useState(currentUserId);
+  const [filterAssignee, setFilterAssignee] = useState(() => {
+    if (typeof window === 'undefined') return currentUserId;
+    return localStorage.getItem("teamhub_taken_filter_assignee") ?? currentUserId;
+  });
   const [filterClient, setFilterClient] = useState("");
   const [, startTransition] = useTransition();
+
+  useEffect(() => {
+    localStorage.setItem("teamhub_taken_filter_assignee", filterAssignee);
+  }, [filterAssignee]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -271,7 +278,7 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
   }
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       {/* Filters */}
       <div className="bg-white border-b border-slate-100 px-6 py-3 flex items-center gap-4">
         <select
@@ -303,11 +310,11 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
         onDragOver={handleDragOver}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex gap-4 p-6 overflow-x-auto h-full">
+        <div className="flex gap-4 p-6 overflow-x-auto flex-1 min-h-0">
           {COLUMNS.map((col) => {
             const colTasks = getColumnTasks(col.id);
             return (
-              <div key={col.id} className="w-72 shrink-0 flex flex-col">
+              <div key={col.id} className="w-72 shrink-0 flex flex-col min-h-0">
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
                     <div className={`w-2.5 h-2.5 rounded-full ${col.color}`} />
@@ -360,6 +367,16 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
           task={editTask}
           users={users}
           clients={clients}
+          onDeleted={(id, scope) => {
+            setTasks((prev) => {
+              const t = prev.find((x) => x.id === id);
+              if (!t) return prev;
+              if (scope === "one") return prev.filter((x) => x.id !== id);
+              const rootId = t.parentId ?? t.id;
+              return prev.filter((x) => x.id !== rootId && x.parentId !== rootId);
+            });
+            setEditTask(null);
+          }}
         />
       )}
 
@@ -374,6 +391,6 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
           clients={clients}
         />
       )}
-    </>
+    </div>
   );
 }

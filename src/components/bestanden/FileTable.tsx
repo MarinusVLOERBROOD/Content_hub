@@ -32,6 +32,7 @@ interface FileItem {
 interface FileTableProps {
   files: FileItem[];
   searchQuery: string;
+  onDeleted?: () => void;
 }
 
 function fileIcon(mimeType: string) {
@@ -47,7 +48,7 @@ function formatSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 }
 
-export function FileTable({ files, searchQuery }: FileTableProps) {
+export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
   const [previewFile, setPreviewFile] = useState<FileItem | null>(null);
   const [deleteFile, setDeleteFile] = useState<FileItem | null>(null);
   const [renameFileItem, setRenameFileItem] = useState<FileItem | null>(null);
@@ -230,6 +231,7 @@ export function FileTable({ files, searchQuery }: FileTableProps) {
           open={true}
           onClose={() => setDeleteFile(null)}
           file={deleteFile}
+          onDeleted={onDeleted}
         />
       )}
     </>

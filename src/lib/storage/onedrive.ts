@@ -69,7 +69,7 @@ export class OneDriveProvider implements StorageProvider {
   }
 
   private get root(): string {
-    return this.creds.rootFolderPath ?? "root:/De Leo Content Hub:";
+    return this.creds.rootFolderPath ?? "root:/De Leo Team Hub:";
   }
 
   private async headers(): Promise<Record<string, string>> {
@@ -77,7 +77,7 @@ export class OneDriveProvider implements StorageProvider {
     return { Authorization: `Bearer ${this.creds.accessToken}` };
   }
 
-  /** Drive path for a client file: "root:/De Leo Content Hub/slug/rel:" */
+  /** Drive path for a client file: "root:/De Leo Team Hub/slug/rel:" */
   private drivePath(clientSlug: string, relativePath?: string): string {
     const base = `${this.root}/${clientSlug}`;
     return relativePath ? `${base}/${relativePath}:` : `${base}:`;

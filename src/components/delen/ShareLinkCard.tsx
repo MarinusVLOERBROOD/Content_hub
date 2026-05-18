@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Copy, RotateCcw, Clock, CheckCircle2, XCircle } from "lucide-react";
 import { revokeShareLink } from "@/actions/shares";
 import { formatDistanceToNow, isPast, format } from "date-fns";
@@ -20,6 +21,7 @@ interface ShareLinkCardProps {
 }
 
 export function ShareLinkCard({ link }: ShareLinkCardProps) {
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [revokeOpen, setRevokeOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -41,6 +43,7 @@ export function ShareLinkCard({ link }: ShareLinkCardProps) {
     startTransition(async () => {
       await revokeShareLink(link.id);
       setRevokeOpen(false);
+      router.refresh();
     });
   }
 

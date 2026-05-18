@@ -118,7 +118,7 @@ export default function ClientBestandenPage({ params }: PageProps) {
           {loading ? (
             <div className="text-center py-8 text-slate-400 text-sm">Laden...</div>
           ) : (
-            <FileTable files={files} searchQuery={search} />
+            <FileTable files={files} searchQuery={search} onDeleted={loadData} />
           )}
         </div>
       </div>

@@ -69,17 +69,20 @@ export function NewShareForm({ onCreated }: NewShareFormProps) {
       return;
     }
     startTransition(async () => {
-      const result = await createShareLink({
-        fileIds: selectedFiles.map((f) => f.id),
-        recipients,
-        message: message || undefined,
-        expiresInDays: parseInt(expiresInDays),
-      });
-
-      if (result.error) {
-        setError(result.error);
-      } else if (result.token) {
-        setGeneratedToken(result.token);
+      try {
+        const result = await createShareLink({
+          fileIds: selectedFiles.map((f) => f.id),
+          recipients,
+          message: message || undefined,
+          expiresInDays: parseInt(expiresInDays),
+        });
+        if (result?.error) {
+          setError(result.error);
+        } else if (result?.token) {
+          setGeneratedToken(result.token);
+        }
+      } catch {
+        setError("Er is iets misgegaan. Probeer het opnieuw.");
       }
     });
   }

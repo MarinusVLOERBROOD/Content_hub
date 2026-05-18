@@ -1,15 +1,52 @@
 @import "tailwindcss";
 
+/* ── Lufga brand typeface ─────────────────────────────────────────── */
+@font-face { font-family:"Lufga"; font-weight:100; font-style:normal;  src:url("/fonts/LufgaThin.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:100; font-style:italic;  src:url("/fonts/LufgaThinItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:200; font-style:normal;  src:url("/fonts/LufgaExtraLight.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:200; font-style:italic;  src:url("/fonts/LufgaExtraLightItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:300; font-style:normal;  src:url("/fonts/LufgaLight.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:300; font-style:italic;  src:url("/fonts/LufgaLightItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:400; font-style:normal;  src:url("/fonts/LufgaRegular.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:400; font-style:italic;  src:url("/fonts/LufgaItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:500; font-style:normal;  src:url("/fonts/LufgaMedium.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:500; font-style:italic;  src:url("/fonts/LufgaMediumItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:600; font-style:normal;  src:url("/fonts/LufgaSemiBold.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:600; font-style:italic;  src:url("/fonts/LufgaSemiBoldItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:700; font-style:normal;  src:url("/fonts/LufgaBold.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:700; font-style:italic;  src:url("/fonts/LufgaBoldItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:800; font-style:normal;  src:url("/fonts/LufgaExtraBold.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:800; font-style:italic;  src:url("/fonts/LufgaExtraBoldItalic.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:900; font-style:normal;  src:url("/fonts/LufgaBlack.ttf") format("truetype"); font-display:swap; }
+@font-face { font-family:"Lufga"; font-weight:900; font-style:italic;  src:url("/fonts/LufgaBlackItalic.ttf") format("truetype"); font-display:swap; }
+
+/* ── Remap teal → DLM magenta throughout the entire UI ──────────────
+   Every bg-teal-*, text-teal-*, ring-teal-*, border-teal-* class
+   automatically becomes the brand's magenta palette.               */
+@theme {
+  --color-teal-50:  #fbf3f7;
+  --color-teal-100: #fbe9f1;
+  --color-teal-200: #f0c4d9;
+  --color-teal-300: #e896be;
+  --color-teal-400: #d45c93;
+  --color-teal-500: #a94274;
+  --color-teal-600: #8e2c5b;
+  --color-teal-700: #6e1f46;
+  --color-teal-800: #561535;
+  --color-teal-900: #3e0e26;
+}
+
 :root {
-  --background: #f8fafc;
-  --foreground: #0f172a;
-  --sidebar-bg: #1e293b;
-  --sidebar-fg: #e2e8f0;
-  --accent: #3b82f6;
+  --background:  #f8fafc;
+  --foreground:  #0f172a;
+  --sidebar-bg:  #1b1117;
+  --sidebar-fg:  #e2e8f0;
+  --accent:      #8e2c5b;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background:  var(--background);
+  color:       var(--foreground);
+  font-family: "Lufga", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }

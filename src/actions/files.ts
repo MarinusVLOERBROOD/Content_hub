@@ -37,6 +37,7 @@ export async function deleteFile(fileId: string) {
   if (!file) return { error: "Bestand niet gevonden" };
 
   await deleteFileFromDisk(file.client.slug, file.relativePath);
+  await db.shareLinkFile.deleteMany({ where: { fileId } });
   await db.file.delete({ where: { id: fileId } });
 
   revalidatePath(`/bestanden/${file.client.slug}`);

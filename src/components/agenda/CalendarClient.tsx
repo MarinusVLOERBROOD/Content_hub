@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   startOfMonth,
   endOfMonth,
@@ -83,7 +83,31 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
   const [defaultDate, setDefaultDate] = useState<Date>(new Date());
   const [showDeadlines, setShowDeadlines] = useState(true);
   const [filterClient, setFilterClient] = useState("");
-  const [visibleUsers, setVisibleUsers] = useState<Set<string>>(new Set([currentUserId]));
+  const [visibleUsers, setVisibleUsers] = useState<Set<string>>(() => {
+    if (typeof window === 'undefined') return new Set([currentUserId]);
+    try {
+      const saved = localStorage.getItem("teamhub_agenda_visible_users");
+      return saved ? new Set(JSON.parse(saved)) : new Set([currentUserId]);
+    } catch {
+      return new Set([currentUserId]);
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("teamhub_agenda_visible_users", JSON.stringify([...visibleUsers]));
+  }, [visibleUsers]);
+
+  const [localEvents, setLocalEvents] = useState(events);
+
+  function handleEventDeleted(id: string, scope: "one" | "all") {
+    setLocalEvents((prev) => {
+      const evt = prev.find((e) => e.id === id);
+      if (!evt) return prev;
+      if (scope === "one") return prev.filter((e) => e.id !== id);
+      const rootId = evt.parentId ?? evt.id;
+      return prev.filter((e) => e.id !== rootId && e.parentId !== rootId);
+    });
+  }
 
   function navigate(dir: "prev" | "next") {
     if (view === "month") setCurrent(dir === "prev" ? subMonths(current, 1) : addMonths(current, 1));
@@ -104,7 +128,7 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
 
   const filteredEvents = useMemo(
     () =>
-      events.filter((e) => {
+      localEvents.filter((e) => {
         const isCreator = e.creatorId === currentUserId;
         const attendeeIds = e.attendees.map((a) => a.user.id);
         const anyVisible = attendeeIds.some((id) => visibleUsers.has(id)) || (isCreator && visibleUsers.has(currentUserId));
@@ -112,7 +136,7 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
         if (filterClient && e.clientId !== filterClient) return false;
         return true;
       }),
-    [events, visibleUsers, currentUserId, filterClient]
+    [localEvents, visibleUsers, currentUserId, filterClient]
   );
 
   function getEventsForDay(day: Date) {
@@ -274,6 +298,7 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
         key={selectedEvent?.id ?? defaultDate.toISOString()}
         open={modalOpen}
         onClose={() => { setModalOpen(false); setSelectedEvent(null); }}
+        onDeleted={handleEventDeleted}
         event={selectedEvent}
         defaultDate={defaultDate}
         users={users}

@@ -41,15 +41,17 @@ interface DeleteFileDialogProps {
   open: boolean;
   onClose: () => void;
   file: { id: string; name: string };
+  onDeleted?: () => void;
 }
 
-export function DeleteFileDialog({ open, onClose, file }: DeleteFileDialogProps) {
+export function DeleteFileDialog({ open, onClose, file, onDeleted }: DeleteFileDialogProps) {
   const [isPending, startTransition] = useTransition();
 
   function handleConfirm() {
     startTransition(async () => {
       await deleteFile(file.id);
       onClose();
+      onDeleted?.();
     });
   }
 

@@ -84,7 +84,7 @@ export class MegaProvider implements StorageProvider {
   }
 
   private get rootFolderName(): string {
-    return this.creds.rootFolderName ?? "De Leo Content Hub";
+    return this.creds.rootFolderName ?? "De Leo Team Hub";
   }
 
   private async getClientFolder(

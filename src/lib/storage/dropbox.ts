@@ -54,7 +54,7 @@ export class DropboxProvider implements StorageProvider {
   }
 
   private get rootPath(): string {
-    return this.creds.rootPath ?? "/De Leo Content Hub";
+    return this.creds.rootPath ?? "/De Leo Team Hub";
   }
 
   private dbxPath(clientSlug: string, relativePath?: string): string {

@@ -3,7 +3,7 @@ import "./globals.css";
 import { QueryProvider } from "@/components/providers/QueryProvider";
 
 export const metadata: Metadata = {
-  title: "Content Hub — De Leo Media",
+  title: "Team Hub — De Leo Media",
   description: "Deel, sla op en plan je content",
 };
 

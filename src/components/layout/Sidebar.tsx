@@ -37,13 +37,13 @@ export default function Sidebar({ user }: SidebarProps) {
   const [clientModalOpen, setClientModalOpen] = useState(false);
 
   return (
-    <aside className="w-56 bg-slate-900 text-slate-100 flex flex-col h-full shrink-0">
+    <aside className="w-56 bg-[#1b1117] text-slate-100 flex flex-col h-full shrink-0">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-slate-800">
+      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#2a1b23]">
         <div className="w-7 h-7 bg-teal-600 rounded-md flex items-center justify-center shrink-0">
           <Share2 className="w-4 h-4 text-white" />
         </div>
-        <span className="font-semibold text-base">Content Hub</span>
+        <span className="font-semibold text-base">Team Hub</span>
       </div>
 
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
@@ -56,7 +56,7 @@ export default function Sidebar({ user }: SidebarProps) {
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
                   ? "bg-teal-700 text-white"
-                  : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                  : "text-slate-400 hover:bg-[#2a1b23] hover:text-white"
               }`}
             >
               <Icon className="w-5 h-5" />
@@ -72,7 +72,7 @@ export default function Sidebar({ user }: SidebarProps) {
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
               pathname.startsWith("/admin")
                 ? "bg-teal-700 text-white"
-                : "text-slate-400 hover:bg-slate-800 hover:text-white"
+                : "text-slate-400 hover:bg-[#2a1b23] hover:text-white"
             }`}
           >
             <Shield className="w-5 h-5" />
@@ -81,10 +81,10 @@ export default function Sidebar({ user }: SidebarProps) {
         )}
       </nav>
 
-      <div className="px-3 pb-4 border-t border-slate-800 pt-3 space-y-2">
+      <div className="px-3 pb-4 pt-3 space-y-2 border-t border-[#2a1b23]">
         <button
           onClick={() => setClientModalOpen(true)}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-[#2a1b23] hover:text-white transition-colors"
         >
           <UserPlus className="w-5 h-5" />
           Nieuwe klant

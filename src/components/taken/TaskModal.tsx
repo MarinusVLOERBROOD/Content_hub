@@ -28,13 +28,14 @@ interface TaskModalProps {
   open: boolean;
   onClose: () => void;
   onCreated?: (task: any) => void;
+  onDeleted?: (id: string, scope: "one" | "all") => void;
   task?: TaskData | null;
   defaultStatus?: string;
   users: User[];
   clients: ClientItem[];
 }
 
-export function TaskModal({ open, onClose, onCreated, task, defaultStatus = "todo", users, clients }: TaskModalProps) {
+export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultStatus = "todo", users, clients }: TaskModalProps) {
   const isEdit = !!task?.id;
   const isRecurring = !!(task?.recurrenceRule);
 
@@ -56,33 +57,45 @@ export function TaskModal({ open, onClose, onCreated, task, defaultStatus = "tod
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    startTransition(async () => {
-      const data = {
-        title,
-        description: description || undefined,
-        status: status as any,
-        priority: priority as any,
-        dueAt: dueAt ? new Date(dueAt).toISOString() : null,
-        clientId: clientId || null,
-        assigneeId: assigneeId || null,
-        recurrenceRule: recurrenceRule || null,
-        recurrenceEndAt: recurrenceEndAt ? new Date(recurrenceEndAt).toISOString() : null,
-      };
-      const result = isEdit
-        ? await updateTask({ id: task!.id!, ...data })
-        : await createTask(data);
 
-      if (result?.error) setError(result.error);
-      else {
-        if (!isEdit && result.task) onCreated?.(result.task);
-        onClose();
+    if (!title.trim()) {
+      setError("Titel is verplicht");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const data = {
+          title,
+          description: description || undefined,
+          status: status as any,
+          priority: priority as any,
+          dueAt: dueAt ? new Date(dueAt).toISOString() : null,
+          clientId: clientId || null,
+          assigneeId: assigneeId || null,
+          recurrenceRule: recurrenceRule || null,
+          recurrenceEndAt: recurrenceEndAt ? new Date(recurrenceEndAt).toISOString() : null,
+        };
+        const result = isEdit
+          ? await updateTask({ id: task!.id!, ...data })
+          : await createTask(data);
+        if (result?.error) setError(result.error);
+        else {
+          if (!isEdit && result?.task) onCreated?.(result.task);
+          onClose();
+        }
+      } catch {
+        setError("Er is iets misgegaan. Probeer het opnieuw.");
       }
     });
   }
 
   function handleDelete(scope: "one" | "all") {
     startTransition(async () => {
-      if (task?.id) await deleteTask(task.id, scope);
+      if (task?.id) {
+        await deleteTask(task.id, scope);
+        onDeleted?.(task.id, scope);
+      }
       onClose();
     });
   }

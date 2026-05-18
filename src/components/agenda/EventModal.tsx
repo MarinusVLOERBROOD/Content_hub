@@ -36,6 +36,7 @@ interface EventData {
 interface EventModalProps {
   open: boolean;
   onClose: () => void;
+  onDeleted?: (id: string, scope: "one" | "all") => void;
   event?: EventData | null;
   defaultDate?: Date;
   users: User[];
@@ -50,6 +51,7 @@ function formatDateTimeLocal(d: Date) {
 export function EventModal({
   open,
   onClose,
+  onDeleted,
   event,
   defaultDate,
   users,
@@ -87,31 +89,52 @@ export function EventModal({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
-    startTransition(async () => {
-      const data = {
-        title,
-        description,
-        startAt: new Date(startAt).toISOString(),
-        endAt: new Date(endAt).toISOString(),
-        allDay,
-        clientId: clientId || null,
-        attendeeIds,
-        recurrenceRule: recurrenceRule || null,
-        recurrenceEndAt: recurrenceEndAt ? new Date(recurrenceEndAt).toISOString() : null,
-      };
-      const result = isEdit
-        ? await updateEvent({ id: event!.id!, ...data })
-        : await createEvent(data);
 
-      if (result?.error) setError(result.error);
-      else onClose();
-      return undefined;
+    if (!title.trim()) {
+      setError("Titel is verplicht");
+      return;
+    }
+    const startDate = new Date(startAt);
+    const endDate = new Date(endAt);
+    if (!startAt || isNaN(startDate.getTime())) {
+      setError("Begintijd is verplicht");
+      return;
+    }
+    if (!endAt || isNaN(endDate.getTime())) {
+      setError("Eindtijd is verplicht");
+      return;
+    }
+
+    startTransition(async () => {
+      try {
+        const data = {
+          title,
+          description: description || undefined,
+          startAt: startDate.toISOString(),
+          endAt: endDate.toISOString(),
+          allDay,
+          clientId: clientId || null,
+          attendeeIds,
+          recurrenceRule: recurrenceRule || null,
+          recurrenceEndAt: recurrenceEndAt ? new Date(recurrenceEndAt).toISOString() : null,
+        };
+        const result = isEdit
+          ? await updateEvent({ id: event!.id!, ...data })
+          : await createEvent(data);
+        if (result?.error) setError(result.error);
+        else onClose();
+      } catch {
+        setError("Er is iets misgegaan. Probeer het opnieuw.");
+      }
     });
   }
 
   function handleDelete(scope: "one" | "all") {
     startTransition(async () => {
-      if (event?.id) await deleteEvent(event.id, scope);
+      if (event?.id) {
+        await deleteEvent(event.id, scope);
+        onDeleted?.(event.id, scope);
+      }
       onClose();
     });
   }
