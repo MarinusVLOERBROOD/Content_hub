@@ -53,6 +53,7 @@ interface CalEvent {
   attendees: { user: User }[];
   tags: EventTag[];
   parentId?: string | null;
+  recurrenceRule?: string | null;
 }
 
 interface TaskDeadline {
