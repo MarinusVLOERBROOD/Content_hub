@@ -42,6 +42,7 @@ interface Task {
   creator: UserItem;
   client?: ClientItem | null;
   clientId?: string | null;
+  parentId?: string | null;
   tags: Tag[];
 }
 
