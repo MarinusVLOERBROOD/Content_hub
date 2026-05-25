@@ -29,12 +29,16 @@ export async function login(formData: FormData) {
     return { error: "Onjuist e-mailadres of wachtwoord" };
   }
 
-  const session = await getSession();
-  session.userId = user.id;
-  session.email = user.email;
-  session.name = user.name;
-  session.role = user.role as "user" | "admin";
-  await session.save();
+  try {
+    const session = await getSession();
+    session.userId = user.id;
+    session.email = user.email;
+    session.name = user.name;
+    session.role = user.role as "user" | "admin";
+    await session.save();
+  } catch {
+    return { error: "Er is een serverfout opgetreden. Controleer de server-instellingen." };
+  }
 
   redirect("/");
 }
