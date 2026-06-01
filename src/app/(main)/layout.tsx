@@ -1,6 +1,7 @@
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Sidebar from "@/components/layout/Sidebar";
+import { ToastProvider } from "@/contexts/ToastContext";
 
 export default async function MainLayout({
   children,
@@ -14,9 +15,11 @@ export default async function MainLayout({
   });
 
   return (
-    <div className="flex h-full overflow-hidden">
-      <Sidebar user={{ name: session.name, email: session.email, role: session.role, color: dbUser?.color ?? "teal" }} />
-      <main className="flex-1 overflow-y-auto bg-slate-50">{children}</main>
-    </div>
+    <ToastProvider>
+      <div className="flex h-full overflow-hidden">
+        <Sidebar user={{ name: session.name, email: session.email, role: session.role, color: dbUser?.color ?? "teal" }} />
+        <main className="flex-1 overflow-y-auto bg-slate-50">{children}</main>
+      </div>
+    </ToastProvider>
   );
 }

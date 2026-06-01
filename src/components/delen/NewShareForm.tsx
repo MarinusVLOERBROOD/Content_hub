@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { Plus, X, FileText, Image, Video, File } from "lucide-react";
+import { Plus, X, FileText, Image, Video, File, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { FileBrowserPicker } from "./FileBrowserPicker";
 import { createShareLink } from "@/actions/shares";
+import Link from "next/link";
 
 interface SelectedFile {
   id: string;
@@ -43,6 +44,7 @@ export function NewShareForm({ onCreated }: NewShareFormProps) {
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
   const [recipient, setRecipient] = useState("");
   const [recipients, setRecipients] = useState<string[]>([]);
+  const [recipientError, setRecipientError] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [expiresInDays, setExpiresInDays] = useState("7");
   const [error, setError] = useState<string | null>(null);
@@ -50,29 +52,62 @@ export function NewShareForm({ onCreated }: NewShareFormProps) {
   const [copied, setCopied] = useState(false);
   const [isPending, startTransition] = useTransition();
 
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   function addRecipient() {
-    if (recipient && !recipients.includes(recipient)) {
-      setRecipients([...recipients, recipient]);
-      setRecipient("");
+    const trimmed = recipient.trim();
+    if (!trimmed) {
+      setRecipientError("Voer een e-mailadres in");
+      return;
     }
+    if (!emailRegex.test(trimmed)) {
+      setRecipientError("Voer een geldig e-mailadres in");
+      return;
+    }
+    if (recipients.includes(trimmed)) {
+      setRecipientError("Dit e-mailadres is al toegevoegd");
+      return;
+    }
+    setRecipients([...recipients, trimmed]);
+    setRecipient("");
+    setRecipientError(null);
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
+
     if (selectedFiles.length === 0) {
       setError("Selecteer minstens één bestand");
       return;
     }
-    if (recipients.length === 0) {
+
+    // Include unsaved input field value in the recipients list
+    let effectiveRecipients = [...recipients];
+    const trimmed = recipient.trim();
+    if (trimmed) {
+      if (!emailRegex.test(trimmed)) {
+        setRecipientError("Voer een geldig e-mailadres in");
+        return;
+      }
+      if (!effectiveRecipients.includes(trimmed)) {
+        effectiveRecipients = [...effectiveRecipients, trimmed];
+        setRecipients(effectiveRecipients);
+        setRecipient("");
+        setRecipientError(null);
+      }
+    }
+
+    if (effectiveRecipients.length === 0) {
       setError("Voeg minstens één ontvanger toe");
       return;
     }
+
     startTransition(async () => {
       try {
         const result = await createShareLink({
           fileIds: selectedFiles.map((f) => f.id),
-          recipients,
+          recipients: effectiveRecipients,
           message: message || undefined,
           expiresInDays: parseInt(expiresInDays),
         });
@@ -110,7 +145,10 @@ export function NewShareForm({ onCreated }: NewShareFormProps) {
         {generatedToken ? (
           <div className="space-y-4">
             <div className="p-4 bg-green-50 border border-green-200 rounded-xl">
-              <p className="text-sm font-medium text-green-700 mb-2">Link gegenereerd!</p>
+              <div className="flex items-center gap-2 mb-2">
+                <CheckCircle2 size={16} className="text-green-600" />
+                <p className="text-sm font-medium text-green-700">Link gegenereerd en verzonden!</p>
+              </div>
               <div className="flex gap-2">
                 <input
                   readOnly
@@ -122,9 +160,17 @@ export function NewShareForm({ onCreated }: NewShareFormProps) {
                 </Button>
               </div>
             </div>
-            <Button onClick={reset} variant="secondary" className="w-full">
-              Nieuwe verzending
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={reset} variant="secondary" className="flex-1">
+                Nieuwe verzending
+              </Button>
+              <Link
+                href="/bestanden"
+                className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2 text-sm text-teal-700 border border-teal-200 bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors"
+              >
+                Terug naar bestanden →
+              </Link>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -184,7 +230,7 @@ export function NewShareForm({ onCreated }: NewShareFormProps) {
                   type="email"
                   placeholder="e-mail@voorbeeld.nl"
                   value={recipient}
-                  onChange={(e) => setRecipient(e.target.value)}
+                  onChange={(e) => { setRecipient(e.target.value); setRecipientError(null); }}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") { e.preventDefault(); addRecipient(); }
                   }}
@@ -192,8 +238,15 @@ export function NewShareForm({ onCreated }: NewShareFormProps) {
                 />
                 <Button type="button" variant="secondary" onClick={addRecipient} size="md">
                   <Plus size={14} />
+                  Toevoegen
                 </Button>
               </div>
+              {recipientError && (
+                <p className="text-xs text-red-500 mt-1">{recipientError}</p>
+              )}
+              {!recipientError && (
+                <p className="text-xs text-slate-400 mt-1">Druk op Enter of klik Toevoegen om een ontvanger toe te voegen</p>
+              )}
             </div>
 
             {/* Message */}

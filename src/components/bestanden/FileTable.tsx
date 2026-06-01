@@ -12,6 +12,8 @@ import {
   MoreHorizontal,
   Pencil,
   Download,
+  ChevronUp,
+  ChevronDown,
 } from "lucide-react";
 import { FilePreviewModal } from "./FilePreviewModal";
 import { DeleteFileDialog } from "./DeleteConfirmDialog";
@@ -54,6 +56,8 @@ function stripExtension(name: string) {
   return lastDot > 0 ? name.slice(0, lastDot) : name;
 }
 
+type SortKey = "name" | "size" | "uploadedAt";
+
 export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
   const [previewFile, setPreviewFile] = useState<FileItem | null>(null);
   const [deleteFile, setDeleteFile] = useState<FileItem | null>(null);
@@ -62,6 +66,24 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
   const [menuOpen, setMenuOpen] = useState<string | null>(null);
   const [menuPos, setMenuPos] = useState<{ top: number; right: number } | null>(null);
   const menuButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [sortBy, setSortBy] = useState<SortKey>("uploadedAt");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
+
+  function toggleSort(key: SortKey) {
+    if (sortBy === key) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(key);
+      setSortDir(key === "uploadedAt" ? "desc" : "asc");
+    }
+  }
+
+  function SortIcon({ col }: { col: SortKey }) {
+    if (sortBy !== col) return <ChevronUp size={12} className="text-slate-300" />;
+    return sortDir === "asc"
+      ? <ChevronUp size={12} className="text-teal-600" />
+      : <ChevronDown size={12} className="text-teal-600" />;
+  }
 
   useEffect(() => {
     if (!menuOpen) return;
@@ -80,9 +102,15 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
     setMenuOpen(fileId);
   }
 
-  const filtered = files.filter((f) =>
-    f.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filtered = files
+    .filter((f) => f.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    .sort((a, b) => {
+      let cmp = 0;
+      if (sortBy === "name") cmp = a.name.localeCompare(b.name, "nl");
+      else if (sortBy === "size") cmp = a.size - b.size;
+      else cmp = new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime();
+      return sortDir === "asc" ? cmp : -cmp;
+    });
 
   async function handleRename() {
     if (!renameFileItem || !newName.trim()) return;
@@ -108,10 +136,22 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50">
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">Naam</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">
+                <button onClick={() => toggleSort("name")} className="flex items-center gap-1 hover:text-slate-800 transition-colors">
+                  Naam <SortIcon col="name" />
+                </button>
+              </th>
               <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">Type</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">Grootte</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">Datum</th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">
+                <button onClick={() => toggleSort("size")} className="flex items-center gap-1 hover:text-slate-800 transition-colors">
+                  Grootte <SortIcon col="size" />
+                </button>
+              </th>
+              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">
+                <button onClick={() => toggleSort("uploadedAt")} className="flex items-center gap-1 hover:text-slate-800 transition-colors">
+                  Datum <SortIcon col="uploadedAt" />
+                </button>
+              </th>
               <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">Door</th>
               <th className="w-20" />
             </tr>
@@ -128,7 +168,7 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
                     className="flex items-center gap-2 text-slate-800 hover:text-teal-700 text-left"
                   >
                     {fileIcon(file.mimeType)}
-                    <span className="truncate max-w-xs">{stripExtension(file.name)}</span>
+                    <span className="truncate max-w-xs font-mono text-sm">{stripExtension(file.name)}</span>
                   </button>
                 </td>
                 <td className="px-4 py-3 text-slate-500 text-xs uppercase">

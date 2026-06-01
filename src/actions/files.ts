@@ -42,6 +42,21 @@ export async function deleteFile(fileId: string) {
   return { success: true };
 }
 
+export async function restoreFile(fileId: string) {
+  await requireAuth();
+
+  const file = await db.file.findUnique({
+    where: { id: fileId },
+    include: { client: true },
+  });
+  if (!file) return { error: "Bestand niet gevonden" };
+
+  await db.file.update({ where: { id: fileId }, data: { deletedAt: null } });
+
+  revalidatePath(`/bestanden/${file.client.slug}`);
+  return { success: true };
+}
+
 export async function renameFile(fileId: string, newName: string) {
   await requireAuth();
 

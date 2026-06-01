@@ -3,8 +3,9 @@
 import { useState, useTransition } from "react";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { deleteClient } from "@/actions/clients";
-import { deleteFile } from "@/actions/files";
+import { deleteFile, restoreFile } from "@/actions/files";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/contexts/ToastContext";
 
 interface DeleteClientDialogProps {
   open: boolean;
@@ -46,12 +47,20 @@ interface DeleteFileDialogProps {
 
 export function DeleteFileDialog({ open, onClose, file, onDeleted }: DeleteFileDialogProps) {
   const [isPending, startTransition] = useTransition();
+  const { addToast } = useToast();
 
   function handleConfirm() {
     startTransition(async () => {
       await deleteFile(file.id);
       onClose();
       onDeleted?.();
+      addToast({
+        message: `"${file.name}" verwijderd`,
+        onUndo: async () => {
+          await restoreFile(file.id);
+          onDeleted?.();
+        },
+      });
     });
   }
 
@@ -61,7 +70,7 @@ export function DeleteFileDialog({ open, onClose, file, onDeleted }: DeleteFileD
       onClose={onClose}
       onConfirm={handleConfirm}
       title="Bestand verwijderen"
-      message={`Weet je zeker dat je "${file.name}" permanent wilt verwijderen?`}
+      message={`Weet je zeker dat je "${file.name}" wilt verwijderen? Je kunt dit ongedaan maken via de melding onderaan.`}
       confirmLabel="Verwijderen"
       loading={isPending}
     />

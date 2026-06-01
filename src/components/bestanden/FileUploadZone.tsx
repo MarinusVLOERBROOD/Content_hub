@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Upload, X, CheckCircle2, AlertCircle } from "lucide-react";
+import { Upload, X, CheckCircle2, AlertCircle, Clock } from "lucide-react";
 
 interface FileUploadZoneProps {
   clientSlug: string;
@@ -19,6 +19,7 @@ interface UploadFile {
 export function FileUploadZone({ clientSlug, folderPath, onUploadComplete }: FileUploadZoneProps) {
   const [files, setFiles] = useState<UploadFile[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   const onDrop = useCallback((accepted: File[]) => {
     setFiles((prev) => [
@@ -67,10 +68,12 @@ export function FileUploadZone({ clientSlug, folderPath, onUploadComplete }: Fil
 
     setUploading(false);
     if (allDone) {
+      setUploadSuccess(true);
       setTimeout(() => {
         setFiles([]);
+        setUploadSuccess(false);
         onUploadComplete();
-      }, 1000);
+      }, 2000);
     }
   }
 
@@ -102,12 +105,21 @@ export function FileUploadZone({ clientSlug, folderPath, onUploadComplete }: Fil
         </p>
       </div>
 
-      {files.length > 0 && (
+      {uploadSuccess && (
+        <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
+          <CheckCircle2 size={16} className="text-green-600 shrink-0" />
+          <p className="text-sm font-medium text-green-700">Bestanden succesvol geüpload!</p>
+        </div>
+      )}
+
+      {files.length > 0 && !uploadSuccess && (
         <div className="space-y-2">
           {files.map((f, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-3 p-2 bg-white border border-slate-100 rounded-lg"
+              className={`flex items-center gap-3 p-2 bg-white border rounded-lg ${
+                f.status === "pending" ? "border-amber-200 bg-amber-50" : "border-slate-100"
+              }`}
             >
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-slate-800 truncate">{f.file.name}</p>
@@ -121,21 +133,33 @@ export function FileUploadZone({ clientSlug, folderPath, onUploadComplete }: Fil
                 <div className="w-4 h-4 border-2 border-teal-500 border-t-transparent rounded-full animate-spin shrink-0" />
               )}
               {f.status === "pending" && (
-                <button onClick={() => removeFile(idx)} className="text-slate-400 hover:text-slate-600">
-                  <X size={14} />
-                </button>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <span className="flex items-center gap-1 text-xs text-amber-700 font-medium">
+                    <Clock size={11} />
+                    Wacht op bevestiging
+                  </span>
+                  <button onClick={() => removeFile(idx)} className="text-slate-400 hover:text-slate-600 ml-1">
+                    <X size={14} />
+                  </button>
+                </div>
               )}
             </div>
           ))}
 
           {pendingCount > 0 && (
-            <button
-              onClick={uploadAll}
-              disabled={uploading}
-              className="w-full py-2 bg-teal-600 text-white text-sm rounded-lg hover:bg-teal-700 disabled:opacity-60 transition-colors"
-            >
-              {uploading ? "Uploaden..." : `${pendingCount} bestand(en) uploaden`}
-            </button>
+            <div className="space-y-1.5">
+              <p className="text-xs text-amber-700 font-medium text-center">
+                Stap 2 van 2 — klik hieronder om de upload te bevestigen
+              </p>
+              <button
+                onClick={uploadAll}
+                disabled={uploading}
+                className="w-full py-3 flex items-center justify-center gap-2 bg-teal-700 text-white text-sm font-medium rounded-lg hover:bg-teal-800 disabled:opacity-60 transition-colors shadow-sm"
+              >
+                <Upload size={15} />
+                {uploading ? "Uploaden..." : `${pendingCount} bestand(en) uploaden`}
+              </button>
+            </div>
           )}
         </div>
       )}

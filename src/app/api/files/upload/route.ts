@@ -107,8 +107,13 @@ export async function POST(req: Request) {
         uploadedById: session.userId,
       },
       update: {
+        name: file.name,
+        originalName: file.name,
+        mimeType: detectedMime,
         size: buffer.length,
         uploadedById: session.userId,
+        uploadedAt: new Date(),
+        deletedAt: null,
       },
     });
 

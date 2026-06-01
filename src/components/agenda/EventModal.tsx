@@ -6,8 +6,11 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { createEvent, updateEvent, deleteEvent } from "@/actions/events";
+import { useToast } from "@/contexts/ToastContext";
 import { format } from "date-fns";
+import { nl } from "date-fns/locale";
 import { Trash2, RefreshCw } from "lucide-react";
+import { getRecurrencePreview, type RecurrenceRule } from "@/lib/recurrence";
 
 interface User {
   id: string;
@@ -73,14 +76,14 @@ export function EventModal({
   const [attendeeIds, setAttendeeIds] = useState<string[]>(
     event?.attendees?.map((a) => a.user.id) ?? [currentUserId]
   );
-  const [recurrenceRule, setRecurrenceRule] = useState("");
+  const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | "">("");
   const [recurrenceEndAt, setRecurrenceEndAt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const { addToast } = useToast();
 
   function toggleAttendee(id: string) {
-    if (id === currentUserId) return;
     setAttendeeIds((prev) =>
       prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
@@ -134,6 +137,7 @@ export function EventModal({
       if (event?.id) {
         await deleteEvent(event.id, scope);
         onDeleted?.(event.id, scope);
+        addToast({ message: scope === "all" ? "Alle herhalingen verwijderd" : "Afspraak verwijderd" });
       }
       onClose();
     });
@@ -227,25 +231,54 @@ export function EventModal({
 
         {/* Recurrence — only in create mode */}
         {!isEdit && (
-          <div className="grid grid-cols-2 gap-3">
-            <Select
-              label="Herhaling"
-              value={recurrenceRule}
-              onChange={(e) => setRecurrenceRule(e.target.value)}
-              options={[
-                { value: "", label: "Geen herhaling" },
-                { value: "daily", label: "Dagelijks" },
-                { value: "weekly", label: "Wekelijks" },
-                { value: "monthly", label: "Maandelijks" },
-              ]}
-            />
+          <div className="space-y-3">
+            <div>
+              <label className="text-sm font-medium text-slate-700 block mb-2">Herhaling</label>
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+                {(["", "daily", "weekly", "monthly"] as const).map((val, i) => {
+                  const labels = ["Geen", "Dagelijks", "Wekelijks", "Maandelijks"];
+                  const active = recurrenceRule === val;
+                  return (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => { setRecurrenceRule(val); if (!val) setRecurrenceEndAt(""); }}
+                      className={`flex-1 py-2 text-xs font-medium transition-colors ${i > 0 ? "border-l border-slate-200" : ""} ${
+                        active
+                          ? "bg-teal-600 text-white"
+                          : "bg-white text-slate-600 hover:bg-slate-50"
+                      }`}
+                    >
+                      {labels[i]}
+                    </button>
+                  );
+                })}
+              </div>
+              {recurrenceRule && (
+                <p className="text-xs text-teal-700 mt-1.5">
+                  Herhaalt {recurrenceRule === "daily" ? "elke dag" : recurrenceRule === "weekly" ? `elke week op ${format(new Date(startAt), "EEEE", { locale: nl })}` : `elke maand op de ${format(new Date(startAt), "d")}e`}
+                </p>
+              )}
+            </div>
+
             {recurrenceRule && (
-              <Input
-                label="Herhaling t/m"
-                type="date"
-                value={recurrenceEndAt}
-                onChange={(e) => setRecurrenceEndAt(e.target.value)}
-              />
+              <div>
+                <Input
+                  label="Herhaling t/m"
+                  type="date"
+                  value={recurrenceEndAt}
+                  onChange={(e) => setRecurrenceEndAt(e.target.value)}
+                />
+                <p className="text-xs text-slate-400 mt-1">De herhaling loopt t/m deze datum (inclusief)</p>
+                {recurrenceEndAt && (() => {
+                  const preview = getRecurrencePreview(startAt, recurrenceRule, recurrenceEndAt);
+                  return preview.length > 0 ? (
+                    <p className="text-xs text-slate-500 mt-1">
+                      Geplande momenten: {preview.join(", ")}{preview.length === 4 ? "..." : ""}
+                    </p>
+                  ) : null;
+                })()}
+              </div>
             )}
           </div>
         )}
@@ -269,11 +302,10 @@ export function EventModal({
                     type="checkbox"
                     checked={attendeeIds.includes(u.id)}
                     onChange={() => toggleAttendee(u.id)}
-                    disabled={u.id === currentUserId}
                     className="rounded border-slate-300"
                   />
                   <span className="text-sm text-slate-700">
-                    {u.name} {u.id === currentUserId && "(jij)"}
+                    {u.name} {u.id === currentUserId && <span className="text-slate-400">(jij — optioneel)</span>}
                   </span>
                 </label>
               ))}

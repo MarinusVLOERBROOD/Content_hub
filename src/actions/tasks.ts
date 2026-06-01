@@ -8,22 +8,7 @@ import {
   updateTaskSchema,
   moveTaskSchema,
 } from "@/lib/validations/task";
-
-function shiftDate(date: Date, rule: string): Date {
-  const d = new Date(date);
-  if (rule === "daily") d.setDate(d.getDate() + 1);
-  else if (rule === "weekly") d.setDate(d.getDate() + 7);
-  else if (rule === "monthly") d.setMonth(d.getMonth() + 1);
-  return d;
-}
-
-function defaultEndDate(from: Date, rule: string): Date {
-  const d = new Date(from);
-  if (rule === "daily") d.setDate(d.getDate() + 30);
-  else if (rule === "weekly") d.setDate(d.getDate() + 84);
-  else d.setMonth(d.getMonth() + 12);
-  return d;
-}
+import { shiftDate, defaultEndDate } from "@/lib/recurrence";
 
 export async function getTasks() {
   await requireAuth();

@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
 import { createTask, updateTask, deleteTask } from "@/actions/tasks";
 import { Trash2, RefreshCw } from "lucide-react";
+import { getRecurrencePreview, type RecurrenceRule } from "@/lib/recurrence";
+import { useToast } from "@/contexts/ToastContext";
 
 interface User { id: string; name: string; color?: string; }
 interface ClientItem { id: string; name: string; slug: string; }
@@ -48,11 +50,12 @@ export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultSt
   );
   const [clientId, setClientId] = useState(task?.clientId ?? "");
   const [assigneeId, setAssigneeId] = useState(task?.assigneeId ?? "");
-  const [recurrenceRule, setRecurrenceRule] = useState("");
+  const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | "">("");
   const [recurrenceEndAt, setRecurrenceEndAt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
+  const { addToast } = useToast();
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -95,6 +98,7 @@ export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultSt
       if (task?.id) {
         await deleteTask(task.id, scope);
         onDeleted?.(task.id, scope);
+        addToast({ message: scope === "all" ? "Alle herhalingen verwijderd" : "Taak verwijderd" });
       }
       onClose();
     });
@@ -172,28 +176,62 @@ export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultSt
             ...users.map((u) => ({ value: u.id, label: u.name })),
           ]}
         />
+        {!isEdit && (
+          <p className="text-xs text-slate-400 -mt-2">
+            Jij bent de aanmaker van deze taak. "Toewijzen aan" bepaalt wie de taak uitvoert.
+          </p>
+        )}
 
         {/* Recurrence — only in create mode */}
         {!isEdit && (
-          <div className="grid grid-cols-2 gap-3">
-            <Select
-              label="Herhaling"
-              value={recurrenceRule}
-              onChange={(e) => setRecurrenceRule(e.target.value)}
-              options={[
-                { value: "", label: "Geen herhaling" },
-                { value: "daily", label: "Dagelijks" },
-                { value: "weekly", label: "Wekelijks" },
-                { value: "monthly", label: "Maandelijks" },
-              ]}
-            />
+          <div className="space-y-3">
+            <div>
+              <label className="text-sm font-medium text-slate-700 block mb-2">Herhaling</label>
+              <div className="flex rounded-lg border border-slate-200 overflow-hidden">
+                {(["", "daily", "weekly", "monthly"] as const).map((val, i) => {
+                  const labels = ["Geen", "Dagelijks", "Wekelijks", "Maandelijks"];
+                  const active = recurrenceRule === val;
+                  return (
+                    <button
+                      key={val}
+                      type="button"
+                      onClick={() => { setRecurrenceRule(val); if (!val) setRecurrenceEndAt(""); }}
+                      className={`flex-1 py-2 text-xs font-medium transition-colors ${i > 0 ? "border-l border-slate-200" : ""} ${
+                        active
+                          ? "bg-teal-600 text-white"
+                          : "bg-white text-slate-600 hover:bg-slate-50"
+                      }`}
+                    >
+                      {labels[i]}
+                    </button>
+                  );
+                })}
+              </div>
+              {recurrenceRule && dueAt && (
+                <p className="text-xs text-teal-700 mt-1.5">
+                  Herhaalt {recurrenceRule === "daily" ? "elke dag" : recurrenceRule === "weekly" ? `elke week op ${new Date(dueAt + "T12:00").toLocaleDateString("nl-NL", { weekday: "long" })}` : "elke maand"}
+                </p>
+              )}
+            </div>
+
             {recurrenceRule && (
-              <Input
-                label="Herhaling t/m"
-                type="date"
-                value={recurrenceEndAt}
-                onChange={(e) => setRecurrenceEndAt(e.target.value)}
-              />
+              <div>
+                <Input
+                  label="Herhaling t/m"
+                  type="date"
+                  value={recurrenceEndAt}
+                  onChange={(e) => setRecurrenceEndAt(e.target.value)}
+                />
+                <p className="text-xs text-slate-400 mt-1">De herhaling loopt t/m deze datum (inclusief)</p>
+                {recurrenceEndAt && dueAt && (() => {
+                  const preview = getRecurrencePreview(dueAt + "T12:00", recurrenceRule, recurrenceEndAt + "T23:59");
+                  return preview.length > 0 ? (
+                    <p className="text-xs text-slate-500 mt-1">
+                      Geplande momenten: {preview.join(", ")}{preview.length === 4 ? "..." : ""}
+                    </p>
+                  ) : null;
+                })()}
+              </div>
             )}
           </div>
         )}

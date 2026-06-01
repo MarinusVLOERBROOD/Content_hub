@@ -75,8 +75,7 @@ export function FileBrowserPicker({ open, onClose, onSelect, selectedIds }: File
       .then((r) => r.json())
       .then((tree: FolderNode[]) => {
         setFolders(tree);
-        const firstPath = tree.length > 0 ? tree[0].path : "";
-        setSelectedFolder(firstPath);
+        setSelectedFolder("");
       });
   }, [activeClient]);
 
@@ -141,15 +140,23 @@ export function FileBrowserPicker({ open, onClose, onSelect, selectedIds }: File
         {/* Folder tree */}
         <div className="w-44 shrink-0 border-r border-slate-100 pr-3 overflow-y-auto">
           <p className="text-xs font-semibold text-slate-500 uppercase mb-2">Mappen</p>
+          <button
+            onClick={() => setSelectedFolder("")}
+            className={`flex items-center gap-2 w-full px-2 py-1.5 rounded-lg text-sm mb-1 ${
+              selectedFolder === ""
+                ? "bg-teal-50 text-teal-700 font-medium"
+                : "text-slate-600 hover:bg-slate-50"
+            }`}
+          >
+            Alle bestanden
+          </button>
           {folders.length > 0 ? (
             <FolderTree
               nodes={folders}
               selectedPath={selectedFolder}
               onSelect={setSelectedFolder}
             />
-          ) : (
-            <p className="text-xs text-slate-400 py-2">Geen mappen</p>
-          )}
+          ) : null}
         </div>
 
         {/* File list */}

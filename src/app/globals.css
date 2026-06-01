@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap");
 @import "tailwindcss";
 
 /* ── Lufga brand typeface ─────────────────────────────────────────── */
@@ -20,10 +21,11 @@
 @font-face { font-family:"Lufga"; font-weight:900; font-style:normal;  src:url("/fonts/LufgaBlack.ttf") format("truetype"); font-display:swap; }
 @font-face { font-family:"Lufga"; font-weight:900; font-style:italic;  src:url("/fonts/LufgaBlackItalic.ttf") format("truetype"); font-display:swap; }
 
-/* ── Remap teal → DLM magenta throughout the entire UI ──────────────
-   Every bg-teal-*, text-teal-*, ring-teal-*, border-teal-* class
-   automatically becomes the brand's magenta palette.               */
+/* ── Design system tokens ────────────────────────────────────────────
+   Remap teal → DLM magenta, purple → DLM paars, voeg cotton toe,
+   laad JetBrains Mono voor bestandsnamen en code.                  */
 @theme {
+  /* Magenta (primair merk) */
   --color-teal-50:  #fbf3f7;
   --color-teal-100: #fbe9f1;
   --color-teal-200: #f0c4d9;
@@ -34,14 +36,27 @@
   --color-teal-700: #6e1f46;
   --color-teal-800: #561535;
   --color-teal-900: #3e0e26;
+
+  /* Paars (secondair accent) — exacte design-system waarden */
+  --color-purple-600: #7c3aed;
+  --color-purple-700: #5b21b6;
+
+  /* Cotton (warme achtergrond) */
+  --color-cotton:      #F6F2EC;
+  --color-cotton-warm: #EFE9DF;
+
+  /* JetBrains Mono voor bestandsnamen en code */
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", monospace;
 }
 
 :root {
-  --background:  #f8fafc;
-  --foreground:  #0f172a;
-  --sidebar-bg:  #1b1117;
-  --sidebar-fg:  #e2e8f0;
-  --accent:      #8e2c5b;
+  --background:     #F6F2EC;
+  --foreground:     #0f172a;
+  --sidebar-bg:     #1b1117;
+  --sidebar-fg:     #e2e8f0;
+  --accent:         #8e2c5b;
+  --dlm-cotton:     #F6F2EC;
+  --dlm-cotton-warm:#EFE9DF;
 }
 
 body {
@@ -49,4 +64,12 @@ body {
   color:       var(--foreground);
   font-family: "Lufga", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slide-up 0.2s ease-out;
 }
