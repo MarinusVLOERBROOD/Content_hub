@@ -9,7 +9,7 @@ export default async function TakenPage() {
     db.task.findMany({
       include: {
         creator: { select: { id: true, name: true, color: true } },
-        assignee: { select: { id: true, name: true, color: true } },
+        assignees: { include: { user: { select: { id: true, name: true, color: true } } } },
         client: { select: { id: true, name: true, slug: true } },
         tags: true,
       },

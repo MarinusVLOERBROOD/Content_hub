@@ -7,7 +7,7 @@ export const createTaskSchema = z.object({
   priority: z.enum(["low", "medium", "high"]).default("medium"),
   dueAt: z.string().datetime().optional().nullable(),
   clientId: z.string().optional().nullable(),
-  assigneeId: z.string().optional().nullable(),
+  assigneeIds: z.array(z.string()).default([]),
   tags: z.array(z.object({ name: z.string(), color: z.string() })).default([]),
   recurrenceRule: z.enum(["daily", "weekly", "monthly"]).optional().nullable(),
   recurrenceEndAt: z.string().datetime().optional().nullable(),

@@ -43,6 +43,11 @@ export type EventTag = Prisma.EventTagModel
  */
 export type Task = Prisma.TaskModel
 /**
+ * Model TaskAssignee
+ * 
+ */
+export type TaskAssignee = Prisma.TaskAssigneeModel
+/**
  * Model TaskTag
  * 
  */

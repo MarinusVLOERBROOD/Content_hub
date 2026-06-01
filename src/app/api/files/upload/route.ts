@@ -117,6 +117,46 @@ export async function POST(req: Request) {
       },
     });
 
+    // Auto-copy foto/video naar jaar-map
+    const year = new Date().getFullYear();
+    const isImage = detectedMime.startsWith("image/");
+    const isVideo = detectedMime.startsWith("video/");
+
+    if (isImage || isVideo) {
+      const targetFolder = isImage ? `Content/Foto/${year}` : `Content/Video/${year}`;
+      const fileName = relativePath.split("/").pop()!;
+      const targetPath = `${targetFolder}/${fileName}`;
+
+      if (folderPath !== targetFolder) {
+        try {
+          await saveUploadedFile(clientSlug, targetFolder, fileName, buffer, detectedMime);
+          await db.file.upsert({
+            where: { clientId_relativePath: { clientId: client.id, relativePath: targetPath } },
+            create: {
+              name: file.name,
+              originalName: file.name,
+              mimeType: detectedMime,
+              size: buffer.length,
+              relativePath: targetPath,
+              clientId: client.id,
+              uploadedById: session.userId,
+            },
+            update: {
+              name: file.name,
+              originalName: file.name,
+              mimeType: detectedMime,
+              size: buffer.length,
+              uploadedById: session.userId,
+              uploadedAt: new Date(),
+              deletedAt: null,
+            },
+          });
+        } catch {
+          // Niet-kritiek: hoofd-upload is al geslaagd
+        }
+      }
+    }
+
     return NextResponse.json(record);
   } catch (err) {
     console.error("Upload error:", err);

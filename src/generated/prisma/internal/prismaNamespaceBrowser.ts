@@ -56,6 +56,7 @@ export const ModelName = {
   EventAttendee: 'EventAttendee',
   EventTag: 'EventTag',
   Task: 'Task',
+  TaskAssignee: 'TaskAssignee',
   TaskTag: 'TaskTag',
   Client: 'Client',
   File: 'File',
@@ -150,11 +151,19 @@ export const TaskScalarFieldEnum = {
   recurrenceEndAt: 'recurrenceEndAt',
   parentId: 'parentId',
   creatorId: 'creatorId',
-  assigneeId: 'assigneeId',
   clientId: 'clientId'
 } as const
 
 export type TaskScalarFieldEnum = (typeof TaskScalarFieldEnum)[keyof typeof TaskScalarFieldEnum]
+
+
+export const TaskAssigneeScalarFieldEnum = {
+  id: 'id',
+  taskId: 'taskId',
+  userId: 'userId'
+} as const
+
+export type TaskAssigneeScalarFieldEnum = (typeof TaskAssigneeScalarFieldEnum)[keyof typeof TaskAssigneeScalarFieldEnum]
 
 
 export const TaskTagScalarFieldEnum = {

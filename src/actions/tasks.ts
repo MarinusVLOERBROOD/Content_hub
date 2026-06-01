@@ -15,7 +15,7 @@ export async function getTasks() {
   return db.task.findMany({
     include: {
       creator: { select: { id: true, name: true } },
-      assignee: { select: { id: true, name: true } },
+      assignees: { include: { user: { select: { id: true, name: true } } } },
       tags: true,
     },
     orderBy: [{ status: "asc" }, { position: "asc" }],
@@ -27,7 +27,7 @@ export async function createTask(data: unknown) {
   const parsed = createTaskSchema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-  const { tags, dueAt, recurrenceRule, recurrenceEndAt, ...taskData } = parsed.data;
+  const { tags, dueAt, recurrenceRule, recurrenceEndAt, assigneeIds, ...taskData } = parsed.data;
 
   const maxPos = await db.task.findFirst({
     where: { status: taskData.status },
@@ -44,10 +44,11 @@ export async function createTask(data: unknown) {
       recurrenceRule: recurrenceRule ?? null,
       recurrenceEndAt: recurrenceEndAt ? new Date(recurrenceEndAt) : null,
       tags: { create: tags },
+      assignees: { create: assigneeIds.map((uid) => ({ userId: uid })) },
     },
     include: {
       creator: { select: { id: true, name: true, color: true } },
-      assignee: { select: { id: true, name: true, color: true } },
+      assignees: { include: { user: { select: { id: true, name: true, color: true } } } },
       client: { select: { id: true, name: true, slug: true } },
       tags: true,
     },
@@ -72,6 +73,7 @@ export async function createTask(data: unknown) {
           recurrenceRule,
           parentId: task.id,
           tags: { create: tags.map((t) => ({ name: t.name, color: t.color })) },
+          assignees: { create: assigneeIds.map((uid) => ({ userId: uid })) },
         },
       });
       current = shiftDate(current, recurrenceRule);
@@ -88,7 +90,7 @@ export async function updateTask(data: unknown) {
   const parsed = updateTaskSchema.safeParse(data);
   if (!parsed.success) return { error: parsed.error.issues[0].message };
 
-  const { id, tags, dueAt, ...taskData } = parsed.data;
+  const { id, tags, dueAt, assigneeIds, ...taskData } = parsed.data;
 
   const updateData: Record<string, unknown> = { ...taskData };
   if (dueAt !== undefined) updateData.dueAt = dueAt ? new Date(dueAt) : null;
@@ -98,12 +100,17 @@ export async function updateTask(data: unknown) {
     updateData.tags = { create: tags };
   }
 
+  if (assigneeIds !== undefined) {
+    await db.taskAssignee.deleteMany({ where: { taskId: id } });
+    updateData.assignees = { create: assigneeIds.map((uid) => ({ userId: uid })) };
+  }
+
   const task = await db.task.update({
     where: { id },
     data: updateData,
     include: {
       creator: { select: { id: true, name: true } },
-      assignee: { select: { id: true, name: true } },
+      assignees: { include: { user: { select: { id: true, name: true } } } },
       tags: true,
     },
   });

@@ -60,112 +60,175 @@ async function main() {
   const flex = clients["sportschool-flex"];
   const bella = clients["restaurant-bella"];
 
-  // ── Afspraken aanmaken ──────────────────────────────────────────────────────
+  // ── Afspraken aanmaken — juni + juli ────────────────────────────────────────
   const events = [
-    // Verleden afspraken
+    // ── Juni ──────────────────────────────────────────────────────────────────
     {
-      title: "Kick-off planning",
-      description: "Maandplanning en taakverdeling bespreken",
-      startAt: rel(-21, 9), endAt: rel(-21, 10),
+      title: "Terugblik mei / kick-off juni",
+      description: "Maandplanning bespreken en taakverdeling voor juni vaststellen",
+      startAt: rel(-2, 9), endAt: rel(-2, 10),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
     {
       title: "Fotoshoot Sportschool Flex",
-      description: "Sportfoto's voor social media en website",
-      startAt: rel(-18, 10), endAt: rel(-18, 12),
+      description: "Sportfoto's voor social media en website zomercampagne",
+      startAt: rel(2, 10), endAt: rel(2, 13),
       clientId: flex.id, creatorId: marinus?.id ?? admin.id,
       attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
     },
     {
-      title: "Review sociale media Bakkerij De Zon",
-      description: "Resultaten vorige maand doornemen en bijsturen",
-      startAt: rel(-15, 14), endAt: rel(-15, 15),
+      title: "Contentbespreking Bakkerij De Zon",
+      description: "Nieuwe contentstrategie zomer bespreken en kalender invullen",
+      startAt: rel(4, 9), endAt: rel(4, 10),
       clientId: zon.id, creatorId: admin.id,
       attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
     },
     {
-      title: "Contentbespreking Tandarts Vermeer",
-      description: "Nieuwe contentstrategie voor komend kwartaal bespreken",
-      startAt: rel(-13, 9), endAt: rel(-13, 10, 30),
-      clientId: tand.id, creatorId: admin.id,
-      attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
-    },
-    {
-      title: "Videocall campagne-ideeën Restaurant Bella",
-      description: "Brainstorm zomercampagne en promotiemateriaal",
-      startAt: rel(-11, 11), endAt: rel(-11, 12),
+      title: "Videocall Restaurant Bella — zomercampagne",
+      description: "Brainstorm zomercampagne, promotiemateriaal en tijdlijn",
+      startAt: rel(6, 11), endAt: rel(6, 12),
       clientId: bella.id, creatorId: admin.id,
       attendeeIds: [admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
     },
     {
-      title: "Social media planning update",
-      description: "Content kalender afronden voor de komende twee weken",
-      startAt: rel(-7, 9), endAt: rel(-7, 10, 30),
-      clientId: null, creatorId: admin.id,
-      attendeeIds: userList.map((u) => u.id),
-    },
-    {
-      title: "Videoshoot Bakkerij De Zon",
-      description: "Productievideo's voor Instagram Reels en TikTok",
-      startAt: rel(-4, 13), endAt: rel(-4, 16),
-      clientId: zon.id, creatorId: marinus?.id ?? admin.id,
-      attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
-    },
-    {
-      title: "SEO-check Tandarts Vermeer",
-      description: "Technische SEO doorlichten en verbeterpunten noteren",
-      startAt: rel(-3, 10), endAt: rel(-3, 11),
-      clientId: tand.id, creatorId: marinus?.id ?? admin.id,
-      attendeeIds: [marinus?.id ?? admin.id].filter(Boolean) as string[],
-    },
-    // Komende afspraken
-    {
       title: "Wekelijks teamoverleg",
       description: "Voortgang bespreken en obstakels oplossen",
-      startAt: rel(2, 9), endAt: rel(2, 10),
+      startAt: rel(7, 9), endAt: rel(7, 10),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
     {
-      title: "Presentatie nieuwe campagne Sportschool Flex",
-      description: "Zomercampagne presenteren aan de klant",
-      startAt: rel(3, 14), endAt: rel(3, 15, 30),
+      title: "Google Ads review Tandarts Vermeer",
+      description: "Campagneprestaties doornemen en budget voor juli heralloceren",
+      startAt: rel(9, 11), endAt: rel(9, 12),
+      clientId: tand.id, creatorId: admin.id,
+      attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
+    },
+    {
+      title: "Presentatie campagnevoorstel Sportschool Flex",
+      description: "Zomercampagne presenteren aan de klant ter goedkeuring",
+      startAt: rel(11, 14), endAt: rel(11, 15, 30),
       clientId: flex.id, creatorId: admin.id,
       attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
     },
     {
-      title: "Fotobeoordeling Bakkerij De Zon",
-      description: "Bewerkte foto's beoordelen en selectie maken",
-      startAt: rel(5, 10), endAt: rel(5, 12),
-      clientId: zon.id, creatorId: admin.id,
-      attendeeIds: [admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
-    },
-    {
-      title: "Contentcheck Restaurant Bella",
-      description: "Advertentieteksten en beelden voor zomercampagne reviewen",
-      startAt: rel(6, 9), endAt: rel(6, 10),
-      clientId: bella.id, creatorId: marinus?.id ?? admin.id,
-      attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
-    },
-    {
-      title: "Google Ads evaluatie Tandarts Vermeer",
-      description: "Campagneprestaties bespreken en budget heralloceren",
-      startAt: rel(9, 11), endAt: rel(9, 12),
-      clientId: tand.id, creatorId: admin.id,
-      attendeeIds: [admin.id],
-    },
-    {
-      title: "Planning volgende periode brainstorm",
-      description: "Ideeën verzamelen voor content en campagnes",
-      startAt: rel(10, 13), endAt: rel(10, 14),
+      title: "Wekelijks teamoverleg",
+      description: "Voortgang bespreken en obstakels oplossen",
+      startAt: rel(14, 9), endAt: rel(14, 10),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
     {
-      title: "Maandafsluiting en rapportage",
-      description: "Resultaten bespreken, facturen controleren en archiveren",
-      startAt: rel(14, 15), endAt: rel(14, 16),
+      title: "Fotobeoordeling Bakkerij De Zon",
+      description: "Bewerkte foto's beoordelen en selectie maken voor zomercampagne",
+      startAt: rel(16, 10), endAt: rel(16, 11, 30),
+      clientId: zon.id, creatorId: admin.id,
+      attendeeIds: [admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
+    },
+    {
+      title: "SEO-check Tandarts Vermeer",
+      description: "Technische SEO doorlichten en verbeterpunten noteren",
+      startAt: rel(18, 10), endAt: rel(18, 11),
+      clientId: tand.id, creatorId: marinus?.id ?? admin.id,
+      attendeeIds: [marinus?.id ?? admin.id].filter(Boolean) as string[],
+    },
+    {
+      title: "Wekelijks teamoverleg",
+      description: "Voortgang bespreken en obstakels oplossen",
+      startAt: rel(21, 9), endAt: rel(21, 10),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Maandafsluiting juni",
+      description: "Resultaten bespreken, facturen controleren en rapportages archiveren",
+      startAt: rel(28, 15), endAt: rel(28, 16, 30),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Wekelijks teamoverleg",
+      description: "Voortgang bespreken en obstakels oplossen",
+      startAt: rel(28, 9), endAt: rel(28, 10),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    // ── Juli ──────────────────────────────────────────────────────────────────
+    {
+      title: "Kick-off juli",
+      description: "Maandplanning juli vaststellen en Q3-doelen bespreken",
+      startAt: rel(30, 9), endAt: rel(30, 10, 30),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Videoshoot Restaurant Bella — zomercampagne",
+      description: "Promofilmpjes voor social media en website opnemen",
+      startAt: rel(33, 12), endAt: rel(33, 16),
+      clientId: bella.id, creatorId: marinus?.id ?? admin.id,
+      attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
+    },
+    {
+      title: "Wekelijks teamoverleg",
+      description: "Voortgang bespreken en obstakels oplossen",
+      startAt: rel(35, 9), endAt: rel(35, 10),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Contentbespreking Sportschool Flex",
+      description: "Najaarscontent en social media strategie Q3 bespreken",
+      startAt: rel(37, 10), endAt: rel(37, 11),
+      clientId: flex.id, creatorId: admin.id,
+      attendeeIds: [admin.id, marinus?.id].filter(Boolean) as string[],
+    },
+    {
+      title: "Review resultaten Q2",
+      description: "Kwartaalprestaties analyseren en verbeterpunten vaststellen",
+      startAt: rel(40, 14), endAt: rel(40, 16),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Wekelijks teamoverleg",
+      description: "Voortgang bespreken en obstakels oplossen",
+      startAt: rel(42, 9), endAt: rel(42, 10),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Fotoshoot Bakkerij De Zon — najaarscollectie",
+      description: "Productfoto's voor najaarscampagne en nieuwe menukaart",
+      startAt: rel(44, 10), endAt: rel(44, 13),
+      clientId: zon.id, creatorId: marinus?.id ?? admin.id,
+      attendeeIds: [marinus?.id ?? admin.id, lisa?.id ?? admin.id].filter(Boolean) as string[],
+    },
+    {
+      title: "Wekelijks teamoverleg",
+      description: "Voortgang bespreken en obstakels oplossen",
+      startAt: rel(49, 9), endAt: rel(49, 10),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Wekelijks teamoverleg",
+      description: "Voortgang bespreken en obstakels oplossen",
+      startAt: rel(56, 9), endAt: rel(56, 10),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Presentatie halfjaarrapport",
+      description: "Resultaten eerste helft 2026 presenteren aan alle klanten",
+      startAt: rel(58, 13), endAt: rel(58, 15),
+      clientId: null, creatorId: admin.id,
+      attendeeIds: userList.map((u) => u.id),
+    },
+    {
+      title: "Maandafsluiting juli",
+      description: "Resultaten bespreken, facturen controleren en rapportages archiveren",
+      startAt: rel(60, 15), endAt: rel(60, 16, 30),
       clientId: null, creatorId: admin.id,
       attendeeIds: userList.map((u) => u.id),
     },
@@ -186,32 +249,46 @@ async function main() {
   }
   console.log(`✅ ${eventCount} afspraken aangemaakt`);
 
-  // ── Taken aanmaken ──────────────────────────────────────────────────────────
-  const tasks = [
-    // Hoge prioriteit
-    { title: "Reels maken voor Bakkerij De Zon", priority: "high", status: "todo", dueAt: rel(6), clientId: zon.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
-    { title: "Advertentieteksten Restaurant Bella schrijven", priority: "high", status: "doing", dueAt: rel(3), clientId: bella.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 1000 },
-    { title: "Website content update Tandarts Vermeer", priority: "high", status: "review", dueAt: rel(2), clientId: tand.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
-    // Middel prioriteit
-    { title: "Campagneplan volgende maand opstellen Sportschool Flex", priority: "medium", status: "todo", dueAt: rel(9), clientId: flex.id, assigneeId: admin.id, creatorId: admin.id, position: 2000 },
-    { title: "Foto's bewerken Bakkerij De Zon fotoshoot", priority: "medium", status: "doing", dueAt: rel(4), clientId: zon.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
-    { title: "Maandrapport opmaken", priority: "medium", status: "todo", dueAt: rel(14), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 3000 },
-    { title: "E-mailcampagne Restaurant Bella opzetten", priority: "medium", status: "todo", dueAt: rel(8), clientId: bella.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 4000 },
-    { title: "Pinterest-strategie Sportschool Flex", priority: "medium", status: "review", dueAt: rel(5), clientId: flex.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
-    { title: "Sociale media statistieken rapportage", priority: "medium", status: "review", dueAt: rel(3), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 3000 },
-    // Lage prioriteit
-    { title: "Blog artikel Bakkerij De Zon", priority: "low", status: "todo", dueAt: rel(10), clientId: zon.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 5000 },
-    { title: "Google My Business foto's Tandarts Vermeer", priority: "low", status: "done", dueAt: null, clientId: tand.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 1000 },
-    { title: "Stockfoto's archiveren", priority: "low", status: "done", dueAt: null, clientId: null, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 2000 },
-    { title: "LinkedIn posts Sportschool Flex plannen", priority: "low", status: "doing", dueAt: rel(7), clientId: flex.id, assigneeId: marinus?.id ?? admin.id, creatorId: admin.id, position: 3000 },
-    { title: "Offertesjabloon bijwerken", priority: "low", status: "todo", dueAt: rel(14), clientId: null, assigneeId: admin.id, creatorId: admin.id, position: 6000 },
-    { title: "Hashtag-onderzoek Restaurant Bella", priority: "low", status: "done", dueAt: null, clientId: bella.id, assigneeId: lisa?.id ?? admin.id, creatorId: admin.id, position: 3000 },
+  // ── Taken aanmaken — juni + juli ────────────────────────────────────────────
+  type SeedTask = {
+    title: string; priority: string; status: string;
+    dueAt: Date | null; clientId: string | null;
+    assigneeIds: string[]; creatorId: string; position: number;
+  };
+
+  const m = marinus?.id ?? admin.id;
+  const l = lisa?.id ?? admin.id;
+
+  const tasks: SeedTask[] = [
+    // ── Juni ──────────────────────────────────────────────────────────────────
+    { title: "Reels maken voor Bakkerij De Zon", priority: "high", status: "doing", dueAt: rel(4), clientId: zon.id, assigneeIds: [m], creatorId: admin.id, position: 1000 },
+    { title: "Advertentieteksten Restaurant Bella schrijven", priority: "high", status: "review", dueAt: rel(3), clientId: bella.id, assigneeIds: [l], creatorId: admin.id, position: 1001 },
+    { title: "Website content update Tandarts Vermeer", priority: "high", status: "todo", dueAt: rel(7), clientId: tand.id, assigneeIds: [m], creatorId: admin.id, position: 1002 },
+    { title: "Foto's bewerken fotoshoot Sportschool Flex", priority: "medium", status: "doing", dueAt: rel(5), clientId: flex.id, assigneeIds: [l], creatorId: admin.id, position: 2000 },
+    { title: "Sociale media statistieken rapportage", priority: "medium", status: "review", dueAt: rel(6), clientId: null, assigneeIds: [admin.id], creatorId: admin.id, position: 2001 },
+    { title: "E-mailcampagne Restaurant Bella opzetten", priority: "medium", status: "todo", dueAt: rel(10), clientId: bella.id, assigneeIds: [m], creatorId: admin.id, position: 2002 },
+    { title: "Campagneplan zomer Sportschool Flex", priority: "medium", status: "todo", dueAt: rel(12), clientId: flex.id, assigneeIds: [admin.id, m], creatorId: admin.id, position: 2003 },
+    { title: "Blog artikel Bakkerij De Zon", priority: "low", status: "todo", dueAt: rel(14), clientId: zon.id, assigneeIds: [m], creatorId: admin.id, position: 3000 },
+    { title: "LinkedIn posts Sportschool Flex plannen", priority: "low", status: "doing", dueAt: rel(9), clientId: flex.id, assigneeIds: [m, l], creatorId: admin.id, position: 3001 },
+    { title: "Maandrapport juni opmaken", priority: "medium", status: "todo", dueAt: rel(28), clientId: null, assigneeIds: [admin.id], creatorId: admin.id, position: 2004 },
+    // ── Juli ──────────────────────────────────────────────────────────────────
+    { title: "Q3 contentstrategie opstellen", priority: "high", status: "todo", dueAt: rel(35), clientId: null, assigneeIds: [admin.id, m], creatorId: admin.id, position: 1010 },
+    { title: "Najaarscampagne Bakkerij De Zon voorbereiden", priority: "high", status: "todo", dueAt: rel(42), clientId: zon.id, assigneeIds: [m], creatorId: admin.id, position: 1011 },
+    { title: "Offerte nieuwe klant opstellen", priority: "medium", status: "todo", dueAt: rel(31), clientId: null, assigneeIds: [admin.id], creatorId: admin.id, position: 2010 },
+    { title: "Google Ads optimalisatie Tandarts Vermeer", priority: "medium", status: "todo", dueAt: rel(33), clientId: tand.id, assigneeIds: [m], creatorId: admin.id, position: 2011 },
+    { title: "Instagram-reeks Restaurant Bella zomercampagne", priority: "medium", status: "todo", dueAt: rel(38), clientId: bella.id, assigneeIds: [l], creatorId: admin.id, position: 2012 },
+    { title: "Halfjaarrapport opmaken", priority: "medium", status: "todo", dueAt: rel(58), clientId: null, assigneeIds: [admin.id, m, l], creatorId: admin.id, position: 2013 },
+    { title: "Hashtag-onderzoek Sportschool Flex", priority: "low", status: "todo", dueAt: rel(44), clientId: flex.id, assigneeIds: [m], creatorId: admin.id, position: 3010 },
+    { title: "Stockfoto's archiveren", priority: "low", status: "done", dueAt: null, clientId: null, assigneeIds: [l], creatorId: admin.id, position: 3011 },
   ];
 
-  for (const t of tasks) {
-    const { dueAt, ...rest } = t;
+  for (const { dueAt, assigneeIds, ...rest } of tasks) {
     await db.task.create({
-      data: { ...rest, dueAt: dueAt ?? null },
+      data: {
+        ...rest,
+        dueAt: dueAt ?? null,
+        assignees: { create: assigneeIds.map((uid) => ({ userId: uid })) },
+      },
     });
   }
   console.log(`✅ ${tasks.length} taken aangemaakt`);

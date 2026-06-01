@@ -21,7 +21,7 @@ interface TaskData {
   priority: string;
   dueAt?: Date | null;
   clientId?: string | null;
-  assigneeId?: string | null;
+  assignees?: { userId: string }[];
   recurrenceRule?: string | null;
   parentId?: string | null;
 }
@@ -37,6 +37,15 @@ interface TaskModalProps {
   clients: ClientItem[];
 }
 
+const userColorClass: Record<string, string> = {
+  teal: "bg-teal-500",
+  blue: "bg-blue-500",
+  purple: "bg-purple-500",
+  red: "bg-red-500",
+  orange: "bg-orange-500",
+  green: "bg-green-500",
+};
+
 export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultStatus = "todo", users, clients }: TaskModalProps) {
   const isEdit = !!task?.id;
   const isRecurring = !!(task?.recurrenceRule);
@@ -49,13 +58,21 @@ export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultSt
     task?.dueAt ? new Date(task.dueAt).toISOString().slice(0, 10) : ""
   );
   const [clientId, setClientId] = useState(task?.clientId ?? "");
-  const [assigneeId, setAssigneeId] = useState(task?.assigneeId ?? "");
+  const [assigneeIds, setAssigneeIds] = useState<string[]>(
+    task?.assignees?.map((a) => a.userId) ?? []
+  );
   const [recurrenceRule, setRecurrenceRule] = useState<RecurrenceRule | "">("");
   const [recurrenceEndAt, setRecurrenceEndAt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const [deleteConfirm, setDeleteConfirm] = useState(false);
   const { addToast } = useToast();
+
+  function toggleAssignee(userId: string) {
+    setAssigneeIds((prev) =>
+      prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+    );
+  }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -75,7 +92,7 @@ export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultSt
           priority: priority as any,
           dueAt: dueAt ? new Date(dueAt).toISOString() : null,
           clientId: clientId || null,
-          assigneeId: assigneeId || null,
+          assigneeIds,
           recurrenceRule: recurrenceRule || null,
           recurrenceEndAt: recurrenceEndAt ? new Date(recurrenceEndAt).toISOString() : null,
         };
@@ -167,20 +184,35 @@ export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultSt
           />
         </div>
 
-        <Select
-          label="Toewijzen aan"
-          value={assigneeId}
-          onChange={(e) => setAssigneeId(e.target.value)}
-          options={[
-            { value: "", label: "Niemand" },
-            ...users.map((u) => ({ value: u.id, label: u.name })),
-          ]}
-        />
-        {!isEdit && (
-          <p className="text-xs text-slate-400 -mt-2">
-            Jij bent de aanmaker van deze taak. "Toewijzen aan" bepaalt wie de taak uitvoert.
-          </p>
-        )}
+        {/* Toewijzen aan — meerdere personen */}
+        <div>
+          <label className="text-sm font-medium text-slate-700 block mb-2">Toewijzen aan</label>
+          <div className="flex flex-wrap gap-1.5">
+            {users.map((u) => {
+              const active = assigneeIds.includes(u.id);
+              return (
+                <button
+                  key={u.id}
+                  type="button"
+                  onClick={() => toggleAssignee(u.id)}
+                  className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium border transition-colors ${
+                    active
+                      ? "bg-teal-600 text-white border-teal-600"
+                      : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                  }`}
+                >
+                  <span className={`w-2 h-2 rounded-full shrink-0 ${userColorClass[u.color ?? ""] ?? "bg-teal-500"}`} />
+                  {u.name.split(" ")[0]}
+                </button>
+              );
+            })}
+          </div>
+          {!isEdit && (
+            <p className="text-xs text-slate-400 mt-1.5">
+              Jij bent de aanmaker van deze taak. Klik op namen om uitvoerders te selecteren.
+            </p>
+          )}
+        </div>
 
         {/* Recurrence — only in create mode */}
         {!isEdit && (

@@ -249,7 +249,7 @@ export type UserWhereInput = {
   eventsCreated?: Prisma.EventListRelationFilter
   eventAttendees?: Prisma.EventAttendeeListRelationFilter
   tasksCreated?: Prisma.TaskListRelationFilter
-  tasksAssigned?: Prisma.TaskListRelationFilter
+  taskAssignees?: Prisma.TaskAssigneeListRelationFilter
   shareLinksCreated?: Prisma.ShareLinkListRelationFilter
   fileUploads?: Prisma.FileListRelationFilter
 }
@@ -271,7 +271,7 @@ export type UserOrderByWithRelationInput = {
   eventsCreated?: Prisma.EventOrderByRelationAggregateInput
   eventAttendees?: Prisma.EventAttendeeOrderByRelationAggregateInput
   tasksCreated?: Prisma.TaskOrderByRelationAggregateInput
-  tasksAssigned?: Prisma.TaskOrderByRelationAggregateInput
+  taskAssignees?: Prisma.TaskAssigneeOrderByRelationAggregateInput
   shareLinksCreated?: Prisma.ShareLinkOrderByRelationAggregateInput
   fileUploads?: Prisma.FileOrderByRelationAggregateInput
 }
@@ -296,7 +296,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   eventsCreated?: Prisma.EventListRelationFilter
   eventAttendees?: Prisma.EventAttendeeListRelationFilter
   tasksCreated?: Prisma.TaskListRelationFilter
-  tasksAssigned?: Prisma.TaskListRelationFilter
+  taskAssignees?: Prisma.TaskAssigneeListRelationFilter
   shareLinksCreated?: Prisma.ShareLinkListRelationFilter
   fileUploads?: Prisma.FileListRelationFilter
 }, "id" | "email">
@@ -356,7 +356,7 @@ export type UserCreateInput = {
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileCreateNestedManyWithoutUploadedByInput
 }
@@ -378,7 +378,7 @@ export type UserUncheckedCreateInput = {
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileUncheckedCreateNestedManyWithoutUploadedByInput
 }
@@ -400,7 +400,7 @@ export type UserUpdateInput = {
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUpdateManyWithoutUploadedByNestedInput
 }
@@ -422,7 +422,7 @@ export type UserUncheckedUpdateInput = {
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUncheckedUpdateManyWithoutUploadedByNestedInput
 }
@@ -528,11 +528,6 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
-export type UserNullableScalarRelationFilter = {
-  is?: Prisma.UserWhereInput | null
-  isNot?: Prisma.UserWhereInput | null
-}
-
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -583,12 +578,6 @@ export type UserCreateNestedOneWithoutTasksCreatedInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
-export type UserCreateNestedOneWithoutTasksAssignedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTasksAssignedInput, Prisma.UserUncheckedCreateWithoutTasksAssignedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksAssignedInput
-  connect?: Prisma.UserWhereUniqueInput
-}
-
 export type UserUpdateOneRequiredWithoutTasksCreatedNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutTasksCreatedInput, Prisma.UserUncheckedCreateWithoutTasksCreatedInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksCreatedInput
@@ -597,14 +586,18 @@ export type UserUpdateOneRequiredWithoutTasksCreatedNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTasksCreatedInput, Prisma.UserUpdateWithoutTasksCreatedInput>, Prisma.UserUncheckedUpdateWithoutTasksCreatedInput>
 }
 
-export type UserUpdateOneWithoutTasksAssignedNestedInput = {
-  create?: Prisma.XOR<Prisma.UserCreateWithoutTasksAssignedInput, Prisma.UserUncheckedCreateWithoutTasksAssignedInput>
-  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTasksAssignedInput
-  upsert?: Prisma.UserUpsertWithoutTasksAssignedInput
-  disconnect?: Prisma.UserWhereInput | boolean
-  delete?: Prisma.UserWhereInput | boolean
+export type UserCreateNestedOneWithoutTaskAssigneesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTaskAssigneesInput, Prisma.UserUncheckedCreateWithoutTaskAssigneesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTaskAssigneesInput
   connect?: Prisma.UserWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTasksAssignedInput, Prisma.UserUpdateWithoutTasksAssignedInput>, Prisma.UserUncheckedUpdateWithoutTasksAssignedInput>
+}
+
+export type UserUpdateOneRequiredWithoutTaskAssigneesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutTaskAssigneesInput, Prisma.UserUncheckedCreateWithoutTaskAssigneesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutTaskAssigneesInput
+  upsert?: Prisma.UserUpsertWithoutTaskAssigneesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTaskAssigneesInput, Prisma.UserUpdateWithoutTaskAssigneesInput>, Prisma.UserUncheckedUpdateWithoutTaskAssigneesInput>
 }
 
 export type UserCreateNestedOneWithoutFileUploadsInput = {
@@ -651,7 +644,7 @@ export type UserCreateWithoutEventsCreatedInput = {
   notifAgenda?: boolean
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileCreateNestedManyWithoutUploadedByInput
 }
@@ -672,7 +665,7 @@ export type UserUncheckedCreateWithoutEventsCreatedInput = {
   notifAgenda?: boolean
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileUncheckedCreateNestedManyWithoutUploadedByInput
 }
@@ -709,7 +702,7 @@ export type UserUpdateWithoutEventsCreatedInput = {
   notifAgenda?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUpdateManyWithoutUploadedByNestedInput
 }
@@ -730,7 +723,7 @@ export type UserUncheckedUpdateWithoutEventsCreatedInput = {
   notifAgenda?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUncheckedUpdateManyWithoutUploadedByNestedInput
 }
@@ -751,7 +744,7 @@ export type UserCreateWithoutEventAttendeesInput = {
   notifAgenda?: boolean
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileCreateNestedManyWithoutUploadedByInput
 }
@@ -772,7 +765,7 @@ export type UserUncheckedCreateWithoutEventAttendeesInput = {
   notifAgenda?: boolean
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileUncheckedCreateNestedManyWithoutUploadedByInput
 }
@@ -809,7 +802,7 @@ export type UserUpdateWithoutEventAttendeesInput = {
   notifAgenda?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUpdateManyWithoutUploadedByNestedInput
 }
@@ -830,7 +823,7 @@ export type UserUncheckedUpdateWithoutEventAttendeesInput = {
   notifAgenda?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUncheckedUpdateManyWithoutUploadedByNestedInput
 }
@@ -851,7 +844,7 @@ export type UserCreateWithoutTasksCreatedInput = {
   notifAgenda?: boolean
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileCreateNestedManyWithoutUploadedByInput
 }
@@ -872,7 +865,7 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
   notifAgenda?: boolean
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedCreateNestedManyWithoutCreatedByInput
   fileUploads?: Prisma.FileUncheckedCreateNestedManyWithoutUploadedByInput
 }
@@ -880,53 +873,6 @@ export type UserUncheckedCreateWithoutTasksCreatedInput = {
 export type UserCreateOrConnectWithoutTasksCreatedInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutTasksCreatedInput, Prisma.UserUncheckedCreateWithoutTasksCreatedInput>
-}
-
-export type UserCreateWithoutTasksAssignedInput = {
-  id?: string
-  email: string
-  name: string
-  passwordHash: string
-  role?: string
-  avatarPath?: string | null
-  jobTitle?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  color?: string
-  notifTasks?: boolean
-  notifShare?: boolean
-  notifAgenda?: boolean
-  eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
-  eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
-  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatorInput
-  shareLinksCreated?: Prisma.ShareLinkCreateNestedManyWithoutCreatedByInput
-  fileUploads?: Prisma.FileCreateNestedManyWithoutUploadedByInput
-}
-
-export type UserUncheckedCreateWithoutTasksAssignedInput = {
-  id?: string
-  email: string
-  name: string
-  passwordHash: string
-  role?: string
-  avatarPath?: string | null
-  jobTitle?: string | null
-  createdAt?: Date | string
-  updatedAt?: Date | string
-  color?: string
-  notifTasks?: boolean
-  notifShare?: boolean
-  notifAgenda?: boolean
-  eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
-  eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
-  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatorInput
-  shareLinksCreated?: Prisma.ShareLinkUncheckedCreateNestedManyWithoutCreatedByInput
-  fileUploads?: Prisma.FileUncheckedCreateNestedManyWithoutUploadedByInput
-}
-
-export type UserCreateOrConnectWithoutTasksAssignedInput = {
-  where: Prisma.UserWhereUniqueInput
-  create: Prisma.XOR<Prisma.UserCreateWithoutTasksAssignedInput, Prisma.UserUncheckedCreateWithoutTasksAssignedInput>
 }
 
 export type UserUpsertWithoutTasksCreatedInput = {
@@ -956,7 +902,7 @@ export type UserUpdateWithoutTasksCreatedInput = {
   notifAgenda?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUpdateManyWithoutUploadedByNestedInput
 }
@@ -977,23 +923,70 @@ export type UserUncheckedUpdateWithoutTasksCreatedInput = {
   notifAgenda?: Prisma.BoolFieldUpdateOperationsInput | boolean
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedUpdateManyWithoutCreatedByNestedInput
   fileUploads?: Prisma.FileUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
-export type UserUpsertWithoutTasksAssignedInput = {
-  update: Prisma.XOR<Prisma.UserUpdateWithoutTasksAssignedInput, Prisma.UserUncheckedUpdateWithoutTasksAssignedInput>
-  create: Prisma.XOR<Prisma.UserCreateWithoutTasksAssignedInput, Prisma.UserUncheckedCreateWithoutTasksAssignedInput>
+export type UserCreateWithoutTaskAssigneesInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash: string
+  role?: string
+  avatarPath?: string | null
+  jobTitle?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  color?: string
+  notifTasks?: boolean
+  notifShare?: boolean
+  notifAgenda?: boolean
+  eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
+  eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
+  tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatorInput
+  shareLinksCreated?: Prisma.ShareLinkCreateNestedManyWithoutCreatedByInput
+  fileUploads?: Prisma.FileCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserUncheckedCreateWithoutTaskAssigneesInput = {
+  id?: string
+  email: string
+  name: string
+  passwordHash: string
+  role?: string
+  avatarPath?: string | null
+  jobTitle?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  color?: string
+  notifTasks?: boolean
+  notifShare?: boolean
+  notifAgenda?: boolean
+  eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
+  eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
+  tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatorInput
+  shareLinksCreated?: Prisma.ShareLinkUncheckedCreateNestedManyWithoutCreatedByInput
+  fileUploads?: Prisma.FileUncheckedCreateNestedManyWithoutUploadedByInput
+}
+
+export type UserCreateOrConnectWithoutTaskAssigneesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutTaskAssigneesInput, Prisma.UserUncheckedCreateWithoutTaskAssigneesInput>
+}
+
+export type UserUpsertWithoutTaskAssigneesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutTaskAssigneesInput, Prisma.UserUncheckedUpdateWithoutTaskAssigneesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutTaskAssigneesInput, Prisma.UserUncheckedCreateWithoutTaskAssigneesInput>
   where?: Prisma.UserWhereInput
 }
 
-export type UserUpdateToOneWithWhereWithoutTasksAssignedInput = {
+export type UserUpdateToOneWithWhereWithoutTaskAssigneesInput = {
   where?: Prisma.UserWhereInput
-  data: Prisma.XOR<Prisma.UserUpdateWithoutTasksAssignedInput, Prisma.UserUncheckedUpdateWithoutTasksAssignedInput>
+  data: Prisma.XOR<Prisma.UserUpdateWithoutTaskAssigneesInput, Prisma.UserUncheckedUpdateWithoutTaskAssigneesInput>
 }
 
-export type UserUpdateWithoutTasksAssignedInput = {
+export type UserUpdateWithoutTaskAssigneesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1014,7 +1007,7 @@ export type UserUpdateWithoutTasksAssignedInput = {
   fileUploads?: Prisma.FileUpdateManyWithoutUploadedByNestedInput
 }
 
-export type UserUncheckedUpdateWithoutTasksAssignedInput = {
+export type UserUncheckedUpdateWithoutTaskAssigneesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1052,7 +1045,7 @@ export type UserCreateWithoutFileUploadsInput = {
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1073,7 +1066,7 @@ export type UserUncheckedCreateWithoutFileUploadsInput = {
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
@@ -1110,7 +1103,7 @@ export type UserUpdateWithoutFileUploadsInput = {
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1131,7 +1124,7 @@ export type UserUncheckedUpdateWithoutFileUploadsInput = {
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   shareLinksCreated?: Prisma.ShareLinkUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
@@ -1152,7 +1145,7 @@ export type UserCreateWithoutShareLinksCreatedInput = {
   eventsCreated?: Prisma.EventCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeCreateNestedManyWithoutUserInput
   fileUploads?: Prisma.FileCreateNestedManyWithoutUploadedByInput
 }
 
@@ -1173,7 +1166,7 @@ export type UserUncheckedCreateWithoutShareLinksCreatedInput = {
   eventsCreated?: Prisma.EventUncheckedCreateNestedManyWithoutCreatorInput
   eventAttendees?: Prisma.EventAttendeeUncheckedCreateNestedManyWithoutUserInput
   tasksCreated?: Prisma.TaskUncheckedCreateNestedManyWithoutCreatorInput
-  tasksAssigned?: Prisma.TaskUncheckedCreateNestedManyWithoutAssigneeInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedCreateNestedManyWithoutUserInput
   fileUploads?: Prisma.FileUncheckedCreateNestedManyWithoutUploadedByInput
 }
 
@@ -1210,7 +1203,7 @@ export type UserUpdateWithoutShareLinksCreatedInput = {
   eventsCreated?: Prisma.EventUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUpdateManyWithoutUserNestedInput
   fileUploads?: Prisma.FileUpdateManyWithoutUploadedByNestedInput
 }
 
@@ -1231,7 +1224,7 @@ export type UserUncheckedUpdateWithoutShareLinksCreatedInput = {
   eventsCreated?: Prisma.EventUncheckedUpdateManyWithoutCreatorNestedInput
   eventAttendees?: Prisma.EventAttendeeUncheckedUpdateManyWithoutUserNestedInput
   tasksCreated?: Prisma.TaskUncheckedUpdateManyWithoutCreatorNestedInput
-  tasksAssigned?: Prisma.TaskUncheckedUpdateManyWithoutAssigneeNestedInput
+  taskAssignees?: Prisma.TaskAssigneeUncheckedUpdateManyWithoutUserNestedInput
   fileUploads?: Prisma.FileUncheckedUpdateManyWithoutUploadedByNestedInput
 }
 
@@ -1244,7 +1237,7 @@ export type UserCountOutputType = {
   eventsCreated: number
   eventAttendees: number
   tasksCreated: number
-  tasksAssigned: number
+  taskAssignees: number
   shareLinksCreated: number
   fileUploads: number
 }
@@ -1253,7 +1246,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   eventsCreated?: boolean | UserCountOutputTypeCountEventsCreatedArgs
   eventAttendees?: boolean | UserCountOutputTypeCountEventAttendeesArgs
   tasksCreated?: boolean | UserCountOutputTypeCountTasksCreatedArgs
-  tasksAssigned?: boolean | UserCountOutputTypeCountTasksAssignedArgs
+  taskAssignees?: boolean | UserCountOutputTypeCountTaskAssigneesArgs
   shareLinksCreated?: boolean | UserCountOutputTypeCountShareLinksCreatedArgs
   fileUploads?: boolean | UserCountOutputTypeCountFileUploadsArgs
 }
@@ -1292,8 +1285,8 @@ export type UserCountOutputTypeCountTasksCreatedArgs<ExtArgs extends runtime.Typ
 /**
  * UserCountOutputType without action
  */
-export type UserCountOutputTypeCountTasksAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.TaskWhereInput
+export type UserCountOutputTypeCountTaskAssigneesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.TaskAssigneeWhereInput
 }
 
 /**
@@ -1328,7 +1321,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   eventsCreated?: boolean | Prisma.User$eventsCreatedArgs<ExtArgs>
   eventAttendees?: boolean | Prisma.User$eventAttendeesArgs<ExtArgs>
   tasksCreated?: boolean | Prisma.User$tasksCreatedArgs<ExtArgs>
-  tasksAssigned?: boolean | Prisma.User$tasksAssignedArgs<ExtArgs>
+  taskAssignees?: boolean | Prisma.User$taskAssigneesArgs<ExtArgs>
   shareLinksCreated?: boolean | Prisma.User$shareLinksCreatedArgs<ExtArgs>
   fileUploads?: boolean | Prisma.User$fileUploadsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1387,7 +1380,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   eventsCreated?: boolean | Prisma.User$eventsCreatedArgs<ExtArgs>
   eventAttendees?: boolean | Prisma.User$eventAttendeesArgs<ExtArgs>
   tasksCreated?: boolean | Prisma.User$tasksCreatedArgs<ExtArgs>
-  tasksAssigned?: boolean | Prisma.User$tasksAssignedArgs<ExtArgs>
+  taskAssignees?: boolean | Prisma.User$taskAssigneesArgs<ExtArgs>
   shareLinksCreated?: boolean | Prisma.User$shareLinksCreatedArgs<ExtArgs>
   fileUploads?: boolean | Prisma.User$fileUploadsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -1401,7 +1394,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     eventsCreated: Prisma.$EventPayload<ExtArgs>[]
     eventAttendees: Prisma.$EventAttendeePayload<ExtArgs>[]
     tasksCreated: Prisma.$TaskPayload<ExtArgs>[]
-    tasksAssigned: Prisma.$TaskPayload<ExtArgs>[]
+    taskAssignees: Prisma.$TaskAssigneePayload<ExtArgs>[]
     shareLinksCreated: Prisma.$ShareLinkPayload<ExtArgs>[]
     fileUploads: Prisma.$FilePayload<ExtArgs>[]
   }
@@ -1816,7 +1809,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   eventsCreated<T extends Prisma.User$eventsCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   eventAttendees<T extends Prisma.User$eventAttendeesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventAttendeesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventAttendeePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tasksCreated<T extends Prisma.User$tasksCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  tasksAssigned<T extends Prisma.User$tasksAssignedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tasksAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  taskAssignees<T extends Prisma.User$taskAssigneesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$taskAssigneesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TaskAssigneePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shareLinksCreated<T extends Prisma.User$shareLinksCreatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shareLinksCreatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShareLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   fileUploads<T extends Prisma.User$fileUploadsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$fileUploadsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -2324,27 +2317,27 @@ export type User$tasksCreatedArgs<ExtArgs extends runtime.Types.Extensions.Inter
 }
 
 /**
- * User.tasksAssigned
+ * User.taskAssignees
  */
-export type User$tasksAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type User$taskAssigneesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Task
+   * Select specific fields to fetch from the TaskAssignee
    */
-  select?: Prisma.TaskSelect<ExtArgs> | null
+  select?: Prisma.TaskAssigneeSelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Task
+   * Omit specific fields from the TaskAssignee
    */
-  omit?: Prisma.TaskOmit<ExtArgs> | null
+  omit?: Prisma.TaskAssigneeOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.TaskInclude<ExtArgs> | null
-  where?: Prisma.TaskWhereInput
-  orderBy?: Prisma.TaskOrderByWithRelationInput | Prisma.TaskOrderByWithRelationInput[]
-  cursor?: Prisma.TaskWhereUniqueInput
+  include?: Prisma.TaskAssigneeInclude<ExtArgs> | null
+  where?: Prisma.TaskAssigneeWhereInput
+  orderBy?: Prisma.TaskAssigneeOrderByWithRelationInput | Prisma.TaskAssigneeOrderByWithRelationInput[]
+  cursor?: Prisma.TaskAssigneeWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.TaskScalarFieldEnum | Prisma.TaskScalarFieldEnum[]
+  distinct?: Prisma.TaskAssigneeScalarFieldEnum | Prisma.TaskAssigneeScalarFieldEnum[]
 }
 
 /**

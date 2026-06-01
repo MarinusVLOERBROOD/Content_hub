@@ -61,13 +61,12 @@ export default async function DashboardPage() {
       where: {
         OR: [
           { creatorId: session.userId },
-          { assigneeId: session.userId },
+          { assignees: { some: { userId: session.userId } } },
         ],
         status: { not: "done" },
       },
       orderBy: [{ priority: "desc" }, { dueAt: "asc" }],
       take: 5,
-      include: { assignee: { select: { name: true, color: true } } },
     }),
     db.shareLink.findMany({
       where: {
@@ -96,10 +95,8 @@ export default async function DashboardPage() {
         id: true,
         title: true,
         dueAt: true,
-        assignee: { select: { color: true, name: true } },
+        assignees: { include: { user: { select: { color: true, name: true } } }, take: 1 },
         creator: { select: { color: true, name: true } },
-        assigneeId: true,
-        creatorId: true,
       },
     }),
   ]);
@@ -178,12 +175,13 @@ export default async function DashboardPage() {
                     </div>
                   ))}
                   {dayDeadlines.slice(0, Math.max(0, maxSlots - dayEvents.length)).map((t) => {
-                    const ownerColor = t.assignee?.color ?? t.creator.color ?? "orange";
+                    const firstAssignee = t.assignees[0]?.user;
+                    const ownerColor = firstAssignee?.color ?? t.creator.color ?? "orange";
                     return (
                       <div
                         key={t.id}
                         className="flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-orange-50 border border-orange-200 text-orange-700 truncate"
-                        title={`Deadline: ${t.title}${t.assignee ? ` (${t.assignee.name})` : ""}`}
+                        title={`Deadline: ${t.title}${firstAssignee ? ` (${firstAssignee.name})` : ""}`}
                       >
                         <span className={`w-2 h-2 rounded-full shrink-0 ${userColorClass[ownerColor] ?? "bg-orange-500"}`} />
                         <span className="truncate">{t.title}</span>

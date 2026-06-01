@@ -23,7 +23,7 @@ export default async function AgendaPage() {
         title: true,
         dueAt: true,
         clientId: true,
-        assignee: { select: { id: true, name: true, color: true } },
+        assignees: { include: { user: { select: { id: true, name: true, color: true } } }, take: 1 },
         creator: { select: { id: true, name: true, color: true } },
       },
       orderBy: { dueAt: "asc" },
@@ -55,9 +55,9 @@ export default async function AgendaPage() {
       id: t.id,
       title: t.title,
       dueAt: t.dueAt!.toISOString(),
-      assigneeColor: t.assignee?.color ?? t.creator.color,
-      assigneeName: t.assignee?.name ?? t.creator.name,
-      userId: t.assignee?.id ?? t.creator.id,
+      assigneeColor: t.assignees[0]?.user.color ?? t.creator.color,
+      assigneeName: t.assignees[0]?.user.name ?? t.creator.name,
+      userId: t.assignees[0]?.user.id ?? t.creator.id,
       clientId: t.clientId,
     }));
 

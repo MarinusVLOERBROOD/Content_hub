@@ -28,7 +28,7 @@ model User {
   eventsCreated     Event[]         @relation("EventCreator")
   eventAttendees    EventAttendee[]
   tasksCreated      Task[]          @relation("TaskCreator")
-  tasksAssigned     Task[]          @relation("TaskAssignee")
+  taskAssignees     TaskAssignee[]
   shareLinksCreated ShareLink[]
   fileUploads       File[]
 }
@@ -95,12 +95,21 @@ model Task {
 
   creatorId  String
   creator    User      @relation("TaskCreator", fields: [creatorId], references: [id])
-  assigneeId String?
-  assignee   User?     @relation("TaskAssignee", fields: [assigneeId], references: [id])
   clientId   String?
   client     Client?   @relation(fields: [clientId], references: [id])
 
-  tags TaskTag[]
+  assignees TaskAssignee[]
+  tags      TaskTag[]
+}
+
+model TaskAssignee {
+  id     String @id @default(cuid())
+  taskId String
+  userId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, userId])
 }
 
 model TaskTag {

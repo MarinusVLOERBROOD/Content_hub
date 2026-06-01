@@ -37,8 +37,7 @@ interface Task {
   priority: string;
   dueAt?: Date | null;
   position: number;
-  assigneeId?: string | null;
-  assignee?: UserItem | null;
+  assignees: { user: UserItem }[];
   creator: UserItem;
   client?: ClientItem | null;
   clientId?: string | null;
@@ -123,12 +122,12 @@ function TaskCard({
       style={style}
       className={`bg-white rounded-xl border border-slate-100 p-3 shadow-sm ${isDragging ? "shadow-lg rotate-1" : ""}`}
     >
-      <div className="flex items-start gap-2">
+      <div className="flex items-stretch gap-2">
         <button
           {...listeners}
           {...attributes}
           suppressHydrationWarning
-          className="mt-0.5 text-slate-300 hover:text-slate-500 cursor-grab active:cursor-grabbing shrink-0"
+          className="flex items-center text-slate-300 hover:text-slate-500 cursor-grab active:cursor-grabbing shrink-0 px-0.5"
         >
           <GripVertical size={14} />
         </button>
@@ -152,11 +151,21 @@ function TaskCard({
                 {format(new Date(task.dueAt), "d MMM", { locale: nl })}
               </span>
             )}
-            {task.assignee && (
-              <span className="flex items-center gap-1.5 text-xs text-slate-500">
-                <span className={`w-2.5 h-2.5 rounded-full shrink-0 ${userColorClass[task.assignee.color] ?? "bg-teal-500"}`} />
-                {task.assignee.name.split(" ")[0]}
-              </span>
+            {task.assignees.length > 0 && (
+              <div className="flex items-center -space-x-1">
+                {task.assignees.slice(0, 3).map((a) => (
+                  <span
+                    key={a.user.id}
+                    title={a.user.name}
+                    className={`w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-[9px] text-white font-bold ${userColorClass[a.user.color] ?? "bg-teal-500"}`}
+                  >
+                    {a.user.name[0]}
+                  </span>
+                ))}
+                {task.assignees.length > 3 && (
+                  <span className="text-xs text-slate-400 pl-1.5">+{task.assignees.length - 3}</span>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -192,7 +201,7 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
   );
 
   const filteredTasks = tasks.filter((t) => {
-    if (filterAssignee && t.assigneeId !== filterAssignee) return false;
+    if (filterAssignee && !t.assignees.some((a) => a.user.id === filterAssignee)) return false;
     if (filterClient && t.clientId !== filterClient) return false;
     return true;
   });
@@ -365,7 +374,7 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
           key={editTask.id}
           open={true}
           onClose={() => setEditTask(null)}
-          task={editTask}
+          task={{ ...editTask, assignees: editTask.assignees.map((a) => ({ userId: a.user.id })) }}
           users={users}
           clients={clients}
           onDeleted={(id, scope) => {
