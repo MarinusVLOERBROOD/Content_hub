@@ -56,6 +56,35 @@ function stripExtension(name: string) {
   return lastDot > 0 ? name.slice(0, lastDot) : name;
 }
 
+function folderPath(relativePath: string) {
+  const lastSlash = relativePath.lastIndexOf("/");
+  return lastSlash > 0 ? relativePath.slice(0, lastSlash) : "/";
+}
+
+const MIME_LABELS: Record<string, string> = {
+  "application/pdf": "PDF",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "DOCX",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "XLSX",
+  "application/vnd.openxmlformats-officedocument.presentationml.presentation": "PPTX",
+  "application/msword": "DOC",
+  "application/vnd.ms-excel": "XLS",
+  "application/vnd.ms-powerpoint": "PPT",
+  "application/zip": "ZIP",
+  "application/x-zip-compressed": "ZIP",
+  "text/plain": "TXT",
+  "text/csv": "CSV",
+  "video/mp4": "MP4",
+  "video/quicktime": "MOV",
+  "video/x-msvideo": "AVI",
+  "audio/mpeg": "MP3",
+  "audio/wav": "WAV",
+};
+
+function formatType(mimeType: string): string {
+  if (MIME_LABELS[mimeType]) return MIME_LABELS[mimeType];
+  return (mimeType.split("/")[1] || mimeType).toUpperCase();
+}
+
 type SortKey = "name" | "size" | "uploadedAt";
 
 export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
@@ -136,23 +165,24 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50">
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">
                 <button onClick={() => toggleSort("name")} className="flex items-center gap-1 hover:text-slate-800 transition-colors">
                   Naam <SortIcon col="name" />
                 </button>
               </th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">Type</th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">Type</th>
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">Locatie</th>
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">
                 <button onClick={() => toggleSort("size")} className="flex items-center gap-1 hover:text-slate-800 transition-colors">
                   Grootte <SortIcon col="size" />
                 </button>
               </th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">
                 <button onClick={() => toggleSort("uploadedAt")} className="flex items-center gap-1 hover:text-slate-800 transition-colors">
                   Datum <SortIcon col="uploadedAt" />
                 </button>
               </th>
-              <th className="text-left px-4 py-3 text-xs font-medium text-slate-500">Door</th>
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">Door</th>
               <th className="w-20" />
             </tr>
           </thead>
@@ -162,24 +192,29 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
                 key={file.id}
                 className="border-b border-slate-50 hover:bg-slate-50 transition-colors"
               >
-                <td className="px-4 py-3">
+                <td className="px-4 py-4">
                   <button
                     onClick={() => setPreviewFile(file)}
                     className="flex items-center gap-2 text-slate-800 hover:text-teal-700 text-left"
                   >
                     {fileIcon(file.mimeType)}
-                    <span className="truncate max-w-xs font-mono text-sm">{stripExtension(file.name)}</span>
+                    <span className="truncate max-w-xs font-mono text-sm" title={stripExtension(file.name)}>{stripExtension(file.name)}</span>
                   </button>
                 </td>
-                <td className="px-4 py-3 text-slate-500 text-xs uppercase">
-                  {file.mimeType.split("/")[1] || file.mimeType}
+                <td className="px-4 py-4 text-slate-500 text-xs" title={file.mimeType}>
+                  {formatType(file.mimeType)}
                 </td>
-                <td className="px-4 py-3 text-slate-500">{formatSize(file.size)}</td>
-                <td className="px-4 py-3 text-slate-500">
+                <td className="px-4 py-4 text-slate-400 text-xs max-w-[160px]">
+                  <span className="block truncate" title={folderPath(file.relativePath)}>
+                    {folderPath(file.relativePath)}
+                  </span>
+                </td>
+                <td className="px-4 py-4 text-slate-500">{formatSize(file.size)}</td>
+                <td className="px-4 py-4 text-slate-500">
                   {format(new Date(file.uploadedAt), "d MMM yyyy", { locale: nl })}
                 </td>
-                <td className="px-4 py-3 text-slate-500">{file.uploadedBy.name}</td>
-                <td className="px-4 py-3">
+                <td className="px-4 py-4 text-slate-500">{file.uploadedBy.name}</td>
+                <td className="px-4 py-4">
                   <div className="flex items-center gap-1 justify-end relative">
                     <button
                       onClick={() => setPreviewFile(file)}

@@ -26,13 +26,14 @@ export async function GET(
     orderBy: { uploadedAt: "desc" },
   });
 
-  // Filter to only files directly in this folder (not sub-folders)
+  // Filter to only files directly in this folder (not sub-folders).
+  // When no folder is selected ("Alle bestanden"), return everything.
   const filtered = folder
     ? files.filter((f) => {
         const rest = f.relativePath.substring(folder.length + 1);
         return !rest.includes("/");
       })
-    : files.filter((f) => !f.relativePath.includes("/"));
+    : files;
 
   return NextResponse.json(filtered);
 }

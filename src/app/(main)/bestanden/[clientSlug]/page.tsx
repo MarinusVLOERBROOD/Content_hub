@@ -111,6 +111,7 @@ export default function ClientBestandenPage({ params }: PageProps) {
           <FileUploadZone
             clientSlug={clientSlug}
             folderPath={selectedFolder}
+            folders={folderTree}
             onUploadComplete={loadData}
           />
 

@@ -39,12 +39,10 @@ export default function Sidebar({ user }: SidebarProps) {
   return (
     <aside className="w-56 bg-[#1b1117] text-slate-100 flex flex-col h-full shrink-0">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#2a1b23]">
-        <div className="w-7 h-7 bg-teal-600 rounded-md flex items-center justify-center shrink-0">
-          <Share2 className="w-4 h-4 text-white" />
-        </div>
+      <Link href="/" className="flex items-center gap-2.5 px-5 py-5 border-b border-[#2a1b23] hover:opacity-80 transition-opacity">
+        <img src="/favicon.ico" alt="Logo" className="w-7 h-7 shrink-0" />
         <span className="font-semibold text-base">Team Hub</span>
-      </div>
+      </Link>
 
       <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
         {navItems.map(({ href, label, icon: Icon }) => {

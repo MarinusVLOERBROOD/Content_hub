@@ -4,8 +4,8 @@ import { db } from "@/lib/db";
 import { saveUploadedFile } from "@/lib/file-system";
 import mime from "mime-types";
 
-// 500 MB max upload size
-const MAX_FILE_SIZE = 500 * 1024 * 1024;
+// 25 MB max upload size
+const MAX_FILE_SIZE = 25 * 1024 * 1024;
 
 // Allowed MIME types whitelist
 const ALLOWED_MIME_TYPES = new Set([
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
   // Size check before reading into memory
   if (file.size > MAX_FILE_SIZE) {
     return NextResponse.json(
-      { error: "Bestand is te groot (max 500 MB)" },
+      { error: "Bestand is te groot (max 25 MB)" },
       { status: 413 }
     );
   }

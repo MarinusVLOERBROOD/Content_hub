@@ -54,7 +54,9 @@ export function FileBrowserPicker({ open, onClose, onSelect, selectedIds }: File
   const [activeClient, setActiveClient] = useState<string | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string>("");
   const [search, setSearch] = useState("");
-  const [picked, setPicked] = useState<Set<string>>(new Set(selectedIds));
+  const [pickedFiles, setPickedFiles] = useState<Map<string, FileItem>>(
+    () => new Map(selectedIds.map((id) => [id, { id } as FileItem]))
+  );
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -93,21 +95,30 @@ export function FileBrowserPicker({ open, onClose, onSelect, selectedIds }: File
           client: clients.find((c) => c.slug === activeClient) ?? { name: activeClient, slug: activeClient },
         }));
         setFiles(withClient);
+        // Vul placeholder-objecten aan met echte bestandsdata zodra we ze tegenkomen
+        setPickedFiles((prev) => {
+          const next = new Map(prev);
+          for (const file of withClient) {
+            if (next.has(file.id)) next.set(file.id, file);
+          }
+          return next;
+        });
       })
       .finally(() => setLoading(false));
   }, [activeClient, selectedFolder, clients]);
 
-  function toggleFile(id: string) {
-    setPicked((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+  function toggleFile(file: FileItem) {
+    setPickedFiles((prev) => {
+      const next = new Map(prev);
+      if (next.has(file.id)) next.delete(file.id);
+      else next.set(file.id, file);
       return next;
     });
   }
 
   function handleConfirm() {
-    const selected = files.filter((f) => picked.has(f.id));
+    // Retourneer alle geselecteerde bestanden, ook die uit andere mappen
+    const selected = Array.from(pickedFiles.values()).filter((f) => f.name);
     onSelect(selected);
     onClose();
   }
@@ -180,17 +191,17 @@ export function FileBrowserPicker({ open, onClose, onSelect, selectedIds }: File
             {filtered.map((f) => (
               <button
                 key={f.id}
-                onClick={() => toggleFile(f.id)}
+                onClick={() => toggleFile(f)}
                 className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg text-left transition-colors ${
-                  picked.has(f.id)
+                  pickedFiles.has(f.id)
                     ? "bg-teal-50 border border-teal-200"
                     : "hover:bg-slate-50 border border-transparent"
                 }`}
               >
                 <div className={`w-4 h-4 rounded border-2 flex items-center justify-center shrink-0 ${
-                  picked.has(f.id) ? "bg-teal-600 border-teal-600" : "border-slate-300"
+                  pickedFiles.has(f.id) ? "bg-teal-600 border-teal-600" : "border-slate-300"
                 }`}>
-                  {picked.has(f.id) && <Check size={10} className="text-white" />}
+                  {pickedFiles.has(f.id) && <Check size={10} className="text-white" />}
                 </div>
                 {fileIcon(f.mimeType)}
                 <div className="flex-1 min-w-0">
@@ -205,11 +216,11 @@ export function FileBrowserPicker({ open, onClose, onSelect, selectedIds }: File
 
       <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
         <span className="text-sm text-slate-500">
-          {picked.size} bestand(en) geselecteerd
+          {pickedFiles.size} bestand(en) geselecteerd
         </span>
         <div className="flex gap-3">
           <Button variant="secondary" onClick={onClose}>Annuleren</Button>
-          <Button onClick={handleConfirm} disabled={picked.size === 0}>
+          <Button onClick={handleConfirm} disabled={pickedFiles.size === 0}>
             Bevestigen
           </Button>
         </div>
