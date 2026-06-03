@@ -15,6 +15,7 @@ export default async function InstellingenPage() {
         jobTitle: true,
         role: true,
         color: true,
+        avatarPath: true,
         notifTasks: true,
         notifShare: true,
         notifAgenda: true,

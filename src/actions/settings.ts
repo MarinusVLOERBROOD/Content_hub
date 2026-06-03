@@ -52,20 +52,3 @@ export async function updateNotifications(data: unknown) {
   revalidatePath("/instellingen");
   return { success: true };
 }
-
-export async function getProfile() {
-  const session = await requireAuth();
-  return db.user.findUnique({
-    where: { id: session.userId },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      jobTitle: true,
-      avatarPath: true,
-      notifTasks: true,
-      notifShare: true,
-      notifAgenda: true,
-    },
-  });
-}

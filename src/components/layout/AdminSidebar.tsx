@@ -15,7 +15,7 @@ const adminNavItems = [
 ];
 
 interface AdminSidebarProps {
-  user: { name: string; email: string; role: string; color: string };
+  user: { name: string; email: string; role: string; color: string; userId: string; avatarPath?: string | null };
 }
 
 export function AdminSidebar({ user }: AdminSidebarProps) {
@@ -61,7 +61,7 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
       </nav>
 
       <div className="px-3 pb-4 border-t border-[#2a1b23] pt-3">
-        <UserMenu name={user.name} email={user.email} role={user.role} color={user.color} />
+        <UserMenu name={user.name} email={user.email} role={user.role} color={user.color} userId={user.userId} avatarPath={user.avatarPath} />
       </div>
     </aside>
   );

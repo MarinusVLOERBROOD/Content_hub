@@ -192,7 +192,6 @@ export async function GET(req: Request) {
       `${REDIRECT_BASE}/admin/instellingen?storage_connected=1`
     );
   } catch (err) {
-    console.error("OAuth callback error:", err);
     return NextResponse.redirect(
       `${REDIRECT_BASE}/admin/instellingen?storage_error=token_exchange_failed`
     );

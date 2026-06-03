@@ -9,6 +9,7 @@ import { Select } from "@/components/ui/Select";
 import { Button } from "@/components/ui/Button";
 import { ConfirmDialog } from "@/components/ui/ConfirmDialog";
 import { Avatar } from "@/components/ui/Avatar";
+import { userColorClass } from "@/lib/colors";
 import { format } from "date-fns";
 import { nl } from "date-fns/locale";
 
@@ -21,14 +22,6 @@ const colorOptions = [
   { value: "green", cls: "bg-green-500", label: "Groen" },
 ];
 
-const colorDotClass: Record<string, string> = {
-  teal: "bg-teal-500",
-  blue: "bg-blue-500",
-  purple: "bg-purple-500",
-  red: "bg-red-500",
-  orange: "bg-orange-500",
-  green: "bg-green-500",
-};
 
 interface UserItem {
   id: string;
@@ -185,7 +178,7 @@ export function UserManagement({ initialUsers }: { initialUsers: UserItem[] }) {
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       <Avatar name={u.name} size="sm" />
-                      <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${colorDotClass[u.color] ?? "bg-teal-500"}`} />
+                      <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white ${userColorClass[u.color] ?? "bg-teal-500"}`} />
                     </div>
                     <div>
                       <p className="font-medium text-slate-800">{u.name}</p>

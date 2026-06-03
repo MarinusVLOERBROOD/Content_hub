@@ -14,6 +14,7 @@ import {
   isWithinInterval,
 } from "date-fns";
 import { nl } from "date-fns/locale";
+import { userColorClass } from "@/lib/colors";
 
 function greeting(name: string) {
   const hour = new Date().getHours();
@@ -21,14 +22,6 @@ function greeting(name: string) {
   return `${salutation}, ${name.split(" ")[0]}`;
 }
 
-const userColorClass: Record<string, string> = {
-  teal: "bg-teal-500",
-  blue: "bg-blue-500",
-  purple: "bg-purple-500",
-  red: "bg-red-500",
-  orange: "bg-orange-500",
-  green: "bg-green-500",
-};
 
 export default async function DashboardPage() {
   const session = await requireAuth();

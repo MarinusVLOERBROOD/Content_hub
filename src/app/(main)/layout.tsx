@@ -11,13 +11,13 @@ export default async function MainLayout({
   const session = await requireAuth();
   const dbUser = await db.user.findUnique({
     where: { id: session.userId },
-    select: { color: true },
+    select: { id: true, color: true, avatarPath: true },
   });
 
   return (
     <ToastProvider>
       <div className="flex h-full overflow-hidden">
-        <Sidebar user={{ name: session.name, email: session.email, role: session.role, color: dbUser?.color ?? "teal" }} />
+        <Sidebar user={{ name: session.name, email: session.email, role: session.role, color: dbUser?.color ?? "teal", userId: dbUser?.id ?? session.userId, avatarPath: dbUser?.avatarPath ?? null }} />
         <main className="flex-1 overflow-y-auto bg-slate-50">{children}</main>
       </div>
     </ToastProvider>

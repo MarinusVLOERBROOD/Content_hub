@@ -8,8 +8,8 @@ export default async function AgendaPage() {
   const [events, users, tasks, clients] = await Promise.all([
     db.event.findMany({
       include: {
-        creator: { select: { id: true, name: true, color: true } },
-        attendees: { include: { user: { select: { id: true, name: true, color: true } } } },
+        creator: { select: { id: true, name: true, color: true, avatarPath: true } },
+        attendees: { include: { user: { select: { id: true, name: true, color: true, avatarPath: true } } } },
         client: { select: { id: true, name: true } },
         tags: true,
       },
@@ -23,8 +23,8 @@ export default async function AgendaPage() {
         title: true,
         dueAt: true,
         clientId: true,
-        assignees: { include: { user: { select: { id: true, name: true, color: true } } }, take: 1 },
-        creator: { select: { id: true, name: true, color: true } },
+        assignees: { include: { user: { select: { id: true, name: true, color: true, avatarPath: true } } }, take: 1 },
+        creator: { select: { id: true, name: true, color: true, avatarPath: true } },
       },
       orderBy: { dueAt: "asc" },
     }),

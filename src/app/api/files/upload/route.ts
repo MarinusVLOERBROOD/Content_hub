@@ -159,7 +159,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(record);
   } catch (err) {
-    console.error("Upload error:", err);
     return NextResponse.json({ error: "Upload mislukt" }, { status: 500 });
   }
 }

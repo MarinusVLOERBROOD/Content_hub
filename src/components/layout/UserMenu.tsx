@@ -12,9 +12,11 @@ interface UserMenuProps {
   email: string;
   role: string;
   color: string;
+  userId: string;
+  avatarPath?: string | null;
 }
 
-export function UserMenu({ name, email, role, color }: UserMenuProps) {
+export function UserMenu({ name, email, role, color, userId, avatarPath }: UserMenuProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -35,7 +37,7 @@ export function UserMenu({ name, email, role, color }: UserMenuProps) {
         onClick={() => setOpen(!open)}
         className="flex items-center gap-2 w-full px-3 py-2 rounded-lg hover:bg-slate-800 transition-colors"
       >
-        <Avatar name={name} size="sm" color={color} />
+        <Avatar name={name} size="sm" color={color} src={avatarPath ? `/api/user/avatar/${userId}` : null} />
         <div className="flex-1 min-w-0 text-left">
           <p className="text-sm font-medium text-white truncate">{name}</p>
           <p className="text-xs text-slate-400 truncate">{role === "admin" ? "Beheerder" : "Gebruiker"}</p>

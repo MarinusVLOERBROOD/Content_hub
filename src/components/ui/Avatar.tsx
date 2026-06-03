@@ -12,14 +12,7 @@ const sizeMap = {
   lg: "w-12 h-12 text-base",
 };
 
-const colorMap: Record<string, string> = {
-  teal: "bg-teal-500",
-  blue: "bg-blue-500",
-  purple: "bg-purple-500",
-  red: "bg-red-500",
-  orange: "bg-orange-500",
-  green: "bg-green-500",
-};
+import { userColorClass } from "@/lib/colors";
 
 function getInitials(name: string) {
   return name
@@ -35,7 +28,7 @@ export function Avatar({ name, src, size = "md", color, className = "" }: Avatar
 
   // If color is a hex value use inline style, otherwise use Tailwind class
   const isHex = color?.startsWith("#");
-  const bgClass = !isHex ? (color ? (colorMap[color] ?? "bg-teal-500") : "bg-teal-500") : "";
+  const bgClass = !isHex ? (color ? (userColorClass[color] ?? "bg-teal-500") : "bg-teal-500") : "";
   const bgStyle = isHex ? { backgroundColor: color } : undefined;
 
   if (src) {

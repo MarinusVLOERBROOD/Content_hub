@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { updateProfile, updateNotifications } from "@/actions/settings";
 import { changePassword } from "@/actions/auth";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Toggle } from "@/components/ui/Toggle";
 import { Avatar } from "@/components/ui/Avatar";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Camera } from "lucide-react";
 
 const colorOptions = [
   { value: "teal", hex: "#14b8a6", label: "Teal" },
@@ -55,6 +55,7 @@ interface User {
   jobTitle?: string | null;
   role: string;
   color: string;
+  avatarPath?: string | null;
   notifTasks: boolean;
   notifShare: boolean;
   notifAgenda: boolean;
@@ -69,6 +70,12 @@ export function SettingsClient({ user, takenColors }: { user: User; takenColors:
   const [notifTasks, setNotifTasks] = useState(user.notifTasks);
   const [notifShare, setNotifShare] = useState(user.notifShare);
   const [notifAgenda, setNotifAgenda] = useState(user.notifAgenda);
+  const [avatarSrc, setAvatarSrc] = useState<string | null>(
+    user.avatarPath ? `/api/user/avatar/${user.id}` : null
+  );
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarError, setAvatarError] = useState<string | null>(null);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -117,6 +124,36 @@ export function SettingsClient({ user, takenColors }: { user: User; takenColors:
     });
   }
 
+  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setAvatarError(null);
+    setAvatarUploading(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    const res = await fetch("/api/user/avatar", { method: "POST", body: fd });
+    setAvatarUploading(false);
+    if (res.ok) {
+      setAvatarSrc(`/api/user/avatar/${user.id}?t=${Date.now()}`);
+      router.refresh();
+    } else {
+      const err = await res.json().catch(() => ({ error: "Upload mislukt" }));
+      setAvatarError(err.error ?? "Upload mislukt");
+    }
+    e.target.value = "";
+  }
+
+  async function handleAvatarDelete() {
+    setAvatarError(null);
+    const res = await fetch("/api/user/avatar", { method: "DELETE" });
+    if (res.ok) {
+      setAvatarSrc(null);
+      router.refresh();
+    } else {
+      setAvatarError("Verwijderen mislukt");
+    }
+  }
+
   function handleNotifChange(key: "notifTasks" | "notifShare" | "notifAgenda", value: boolean) {
     const updates = { notifTasks, notifShare, notifAgenda, [key]: value };
     if (key === "notifTasks") setNotifTasks(value);
@@ -137,13 +174,51 @@ export function SettingsClient({ user, takenColors }: { user: User; takenColors:
         <h2 className="text-base font-semibold text-slate-900 mb-4">Profiel</h2>
 
         <div className="flex items-center gap-4 mb-6">
-          <Avatar name={name} size="lg" color={color} />
+          <div className="relative group">
+            <Avatar name={name} size="lg" color={color} src={avatarSrc} />
+            <button
+              type="button"
+              onClick={() => avatarInputRef.current?.click()}
+              disabled={avatarUploading}
+              className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity disabled:cursor-wait"
+              title="Profielfoto wijzigen"
+            >
+              <Camera size={16} className="text-white" />
+            </button>
+            <input
+              ref={avatarInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              className="hidden"
+              onChange={handleAvatarChange}
+            />
+          </div>
           <div>
             <p className="text-sm font-medium text-slate-800">{user.name}</p>
             <p className="text-xs text-slate-400">{user.email}</p>
             <p className="text-xs text-slate-400 capitalize">
               {user.role === "admin" ? "Beheerder" : "Gebruiker"}
             </p>
+            <div className="flex items-center gap-3 mt-1">
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                disabled={avatarUploading}
+                className="text-xs text-teal-600 hover:text-teal-800 disabled:opacity-50"
+              >
+                {avatarUploading ? "Uploaden..." : avatarSrc ? "Foto wijzigen" : "Foto uploaden"}
+              </button>
+              {avatarSrc && (
+                <button
+                  type="button"
+                  onClick={handleAvatarDelete}
+                  className="text-xs text-red-500 hover:text-red-700"
+                >
+                  Verwijderen
+                </button>
+              )}
+            </div>
+            {avatarError && <p className="text-xs text-red-500 mt-0.5">{avatarError}</p>}
           </div>
         </div>
 

@@ -29,6 +29,8 @@ interface SidebarProps {
     email: string;
     role: string;
     color: string;
+    userId: string;
+    avatarPath?: string | null;
   };
 }
 
@@ -87,7 +89,7 @@ export default function Sidebar({ user }: SidebarProps) {
           <UserPlus className="w-5 h-5" />
           Nieuwe klant
         </button>
-        <UserMenu name={user.name} email={user.email} role={user.role} color={user.color} />
+        <UserMenu name={user.name} email={user.email} role={user.role} color={user.color} userId={user.userId} avatarPath={user.avatarPath} />
       </div>
 
       <ClientModal

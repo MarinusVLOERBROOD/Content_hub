@@ -8,8 +8,8 @@ export default async function TakenPage() {
   const [tasks, users, clients] = await Promise.all([
     db.task.findMany({
       include: {
-        creator: { select: { id: true, name: true, color: true } },
-        assignees: { include: { user: { select: { id: true, name: true, color: true } } } },
+        creator: { select: { id: true, name: true, color: true, avatarPath: true } },
+        assignees: { include: { user: { select: { id: true, name: true, color: true, avatarPath: true } } } },
         client: { select: { id: true, name: true, slug: true } },
         tags: true,
       },

@@ -24,18 +24,11 @@ import {
 import { nl } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 import { EventModal } from "./EventModal";
+import { userColorClass } from "@/lib/colors";
 
 interface EventTag { name: string; color: string; }
-interface User { id: string; name: string; color: string; }
+interface User { id: string; name: string; color: string; avatarPath?: string | null; }
 
-const userColorClass: Record<string, string> = {
-  teal: "bg-teal-500",
-  blue: "bg-blue-500",
-  purple: "bg-purple-500",
-  red: "bg-red-500",
-  orange: "bg-orange-500",
-  green: "bg-green-500",
-};
 interface ClientItem { id: string; name: string; }
 
 interface CalEvent {
@@ -297,7 +290,11 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
                   }}
                   className="rounded"
                 />
-                <span className={`w-3 h-3 rounded-full shrink-0 ${userColorClass[u.color] ?? "bg-teal-500"}`} />
+                {u.avatarPath ? (
+                  <img src={`/api/user/avatar/${u.id}`} alt={u.name} className="w-3 h-3 rounded-full shrink-0 object-cover" />
+                ) : (
+                  <span className={`w-3 h-3 rounded-full shrink-0 ${userColorClass[u.color] ?? "bg-teal-500"}`} />
+                )}
                 <span className="text-sm text-slate-700">{u.name}</span>
                 {u.id === currentUserId && <span className="text-xs text-slate-400">(jij)</span>}
               </label>
@@ -554,7 +551,11 @@ function DayView({
               <div className="flex items-center gap-2 mb-2">
                 {e.attendees.map((a: { user: User }) => (
                   <span key={a.user.id} className="flex items-center gap-1.5 text-xs text-white/80">
-                    <span className={`w-3 h-3 rounded-full border-2 border-white/50 shrink-0 ${userColorClass[a.user.color] ?? "bg-white/50"}`} />
+                    {a.user.avatarPath ? (
+                      <img src={`/api/user/avatar/${a.user.id}`} alt={a.user.name} className="w-3 h-3 rounded-full border-2 border-white/50 shrink-0 object-cover" />
+                    ) : (
+                      <span className={`w-3 h-3 rounded-full border-2 border-white/50 shrink-0 ${userColorClass[a.user.color] ?? "bg-white/50"}`} />
+                    )}
                     {a.user.name.split(" ")[0]}
                   </span>
                 ))}

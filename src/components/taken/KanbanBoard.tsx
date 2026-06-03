@@ -25,9 +25,10 @@ import { TaskModal } from "./TaskModal";
 import { format, isPast } from "date-fns";
 import { nl } from "date-fns/locale";
 import { Badge } from "@/components/ui/Badge";
+import { userColorClass } from "@/lib/colors";
 
 interface Tag { id: string; name: string; color: string; }
-interface UserItem { id: string; name: string; color: string; }
+interface UserItem { id: string; name: string; color: string; avatarPath?: string | null; }
 interface ClientItem { id: string; name: string; slug: string; }
 interface Task {
   id: string;
@@ -71,14 +72,6 @@ const priorityLabels: Record<string, string> = {
   low: "Laag",
 };
 
-const userColorClass: Record<string, string> = {
-  teal: "bg-teal-500",
-  blue: "bg-blue-500",
-  purple: "bg-purple-500",
-  red: "bg-red-500",
-  orange: "bg-orange-500",
-  green: "bg-green-500",
-};
 
 function DroppableColumn({ id, children }: { id: string; children: React.ReactNode }) {
   const { setNodeRef, isOver } = useDroppable({ id });
@@ -157,9 +150,15 @@ function TaskCard({
                   <span
                     key={a.user.id}
                     title={a.user.name}
-                    className={`w-5 h-5 rounded-full border-2 border-white flex items-center justify-center text-[9px] text-white font-bold ${userColorClass[a.user.color] ?? "bg-teal-500"}`}
+                    className="w-5 h-5 rounded-full border-2 border-white overflow-hidden shrink-0 inline-flex"
                   >
-                    {a.user.name[0]}
+                    {a.user.avatarPath ? (
+                      <img src={`/api/user/avatar/${a.user.id}`} alt={a.user.name} className="w-full h-full object-cover" />
+                    ) : (
+                      <span className={`w-full h-full inline-flex items-center justify-center leading-none text-[9px] text-white font-bold ${userColorClass[a.user.color] ?? "bg-teal-500"}`}>
+                        {a.user.name[0]}
+                      </span>
+                    )}
                   </span>
                 ))}
                 {task.assignees.length > 3 && (

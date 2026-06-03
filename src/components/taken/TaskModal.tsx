@@ -8,6 +8,7 @@ import { Select } from "@/components/ui/Select";
 import { createTask, updateTask, deleteTask } from "@/actions/tasks";
 import { Trash2, RefreshCw } from "lucide-react";
 import { getRecurrencePreview, type RecurrenceRule } from "@/lib/recurrence";
+import { userColorClass } from "@/lib/colors";
 import { useToast } from "@/contexts/ToastContext";
 
 interface User { id: string; name: string; color?: string; }
@@ -37,14 +38,6 @@ interface TaskModalProps {
   clients: ClientItem[];
 }
 
-const userColorClass: Record<string, string> = {
-  teal: "bg-teal-500",
-  blue: "bg-blue-500",
-  purple: "bg-purple-500",
-  red: "bg-red-500",
-  orange: "bg-orange-500",
-  green: "bg-green-500",
-};
 
 export function TaskModal({ open, onClose, onCreated, onDeleted, task, defaultStatus = "todo", users, clients }: TaskModalProps) {
   const isEdit = !!task?.id;
