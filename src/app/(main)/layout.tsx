@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { requireAuth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Sidebar from "@/components/layout/Sidebar";
