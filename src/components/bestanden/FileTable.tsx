@@ -161,7 +161,7 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-slate-100 overflow-x-hidden">
+      <div className="bg-white rounded-xl border border-slate-100 overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50">
@@ -170,8 +170,8 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
                   Naam <SortIcon col="name" />
                 </button>
               </th>
-              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">Type</th>
-              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">Locatie</th>
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500 hidden sm:table-cell">Type</th>
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500 hidden md:table-cell">Locatie</th>
               <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">
                 <button onClick={() => toggleSort("size")} className="flex items-center gap-1 hover:text-slate-800 transition-colors">
                   Grootte <SortIcon col="size" />
@@ -182,7 +182,7 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
                   Datum <SortIcon col="uploadedAt" />
                 </button>
               </th>
-              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500">Door</th>
+              <th className="text-left px-4 py-4.5 text-xs font-medium text-slate-500 hidden md:table-cell">Door</th>
               <th className="w-20" />
             </tr>
           </thead>
@@ -201,10 +201,10 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
                     <span className="truncate max-w-xs font-mono text-sm" title={stripExtension(file.name)}>{stripExtension(file.name)}</span>
                   </button>
                 </td>
-                <td className="px-4 py-4 text-slate-500 text-xs" title={file.mimeType}>
+                <td className="px-4 py-4 text-slate-500 text-xs hidden sm:table-cell" title={file.mimeType}>
                   {formatType(file.mimeType)}
                 </td>
-                <td className="px-4 py-4 text-slate-400 text-xs max-w-[160px]">
+                <td className="px-4 py-4 text-slate-400 text-xs max-w-[160px] hidden md:table-cell">
                   <span className="block truncate" title={folderPath(file.relativePath)}>
                     {folderPath(file.relativePath)}
                   </span>
@@ -213,7 +213,7 @@ export function FileTable({ files, searchQuery, onDeleted }: FileTableProps) {
                 <td className="px-4 py-4 text-slate-500">
                   {format(new Date(file.uploadedAt), "d MMM yyyy", { locale: nl })}
                 </td>
-                <td className="px-4 py-4 text-slate-500">{file.uploadedBy.name}</td>
+                <td className="px-4 py-4 text-slate-500 hidden md:table-cell">{file.uploadedBy.name}</td>
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-1 justify-end relative">
                     <button

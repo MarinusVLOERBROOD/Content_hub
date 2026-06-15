@@ -54,7 +54,7 @@ export default function ClientBestandenPage({ params }: PageProps) {
     : currentClient?.name ?? clientSlug;
 
   return (
-    <div className="flex h-full">
+    <div className="flex flex-col lg:flex-row h-full overflow-hidden">
       {/* Client sidebar */}
       <ClientSidebar clients={clients} />
 

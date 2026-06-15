@@ -168,7 +168,7 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="bg-white border-b border-slate-100 px-6 py-3 flex items-center justify-between gap-4 shrink-0">
+      <div className="bg-white border-b border-slate-100 px-4 lg:px-6 py-3 flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div className="flex items-center gap-2">
           <button onClick={() => navigate("prev")} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500">
             <ChevronLeft size={18} />
@@ -240,7 +240,8 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
 
       <div className="flex flex-1 overflow-hidden">
         {/* Calendar grid */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto min-w-0">
+          <div className="min-w-[600px]">
           {view === "month" && (
             <MonthView
               current={current}
@@ -269,6 +270,7 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
               onEventClick={openEdit}
             />
           )}
+          </div>
         </div>
 
         {/* Colleague toggle sidebar */}

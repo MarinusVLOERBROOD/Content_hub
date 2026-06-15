@@ -1,8 +1,9 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Folder, Settings, Share2, Trash2, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Users, Folder, Settings, Share2, Trash2, ArrowLeft, Menu, X } from "lucide-react";
 import { UserMenu } from "./UserMenu";
 
 const adminNavItems = [
@@ -20,49 +21,88 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ user }: AdminSidebarProps) {
   const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
 
   return (
-    <aside className="w-56 bg-[#1b1117] text-slate-100 flex flex-col h-full shrink-0">
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#2a1b23]">
-        <div className="w-7 h-7 bg-purple-700 rounded-md flex items-center justify-center shrink-0">
-          <Settings className="w-4 h-4 text-white" />
-        </div>
-        <span className="font-semibold text-base">Beheer</span>
-      </div>
+    <>
+      {/* Hamburger knop — alleen zichtbaar op mobiel */}
+      <button
+        onClick={() => setMobileOpen(true)}
+        className="lg:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-[#1b1117] text-slate-100 shadow-lg"
+        aria-label="Menu openen"
+      >
+        <Menu className="w-5 h-5" />
+      </button>
 
-      <nav className="flex-1 px-3 py-4 space-y-0.5">
-        {adminNavItems.map(({ href, label, icon: Icon }) => {
-          const active = href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
-          return (
+      {/* Backdrop — mobiel, alleen als open */}
+      {mobileOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-40 bg-black/60"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`w-56 bg-[#1b1117] text-slate-100 flex flex-col h-full shrink-0
+          fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto
+          transition-transform duration-200 ease-in-out
+          ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+      >
+        {/* Sluitknop — alleen zichtbaar op mobiel */}
+        <button
+          onClick={() => setMobileOpen(false)}
+          className="lg:hidden absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#2a1b23]"
+          aria-label="Menu sluiten"
+        >
+          <X className="w-4 h-4" />
+        </button>
+
+        <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#2a1b23]">
+          <div className="w-7 h-7 bg-purple-700 rounded-md flex items-center justify-center shrink-0">
+            <Settings className="w-4 h-4 text-white" />
+          </div>
+          <span className="font-semibold text-base">Beheer</span>
+        </div>
+
+        <nav className="flex-1 px-3 py-4 space-y-0.5">
+          {adminNavItems.map(({ href, label, icon: Icon }) => {
+            const active = href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-purple-700 text-white"
+                    : "text-slate-400 hover:bg-[#2a1b23] hover:text-white"
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                {label}
+              </Link>
+            );
+          })}
+
+          <div className="pt-4 mt-4 border-t border-[#2a1b23]">
             <Link
-              key={href}
-              href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                active
-                  ? "bg-purple-700 text-white"
-                  : "text-slate-400 hover:bg-[#2a1b23] hover:text-white"
-              }`}
+              href="/"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:bg-[#2a1b23] hover:text-white transition-colors"
             >
-              <Icon className="w-5 h-5" />
-              {label}
+              <ArrowLeft className="w-5 h-5" />
+              Terug naar app
             </Link>
-          );
-        })}
+          </div>
+        </nav>
 
-        <div className="pt-4 mt-4 border-t border-[#2a1b23]">
-          <Link
-            href="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-slate-400 hover:bg-[#2a1b23] hover:text-white transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Terug naar app
-          </Link>
+        <div className="px-3 pb-4 border-t border-[#2a1b23] pt-3">
+          <UserMenu name={user.name} email={user.email} role={user.role} color={user.color} userId={user.userId} avatarPath={user.avatarPath} />
         </div>
-      </nav>
-
-      <div className="px-3 pb-4 border-t border-[#2a1b23] pt-3">
-        <UserMenu name={user.name} email={user.email} role={user.role} color={user.color} userId={user.userId} avatarPath={user.avatarPath} />
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }

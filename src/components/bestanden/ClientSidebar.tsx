@@ -25,8 +25,8 @@ export function ClientSidebar({ clients }: ClientSidebarProps) {
 
   return (
     <>
-      <div className="w-52 shrink-0 bg-white border-r border-slate-100 flex flex-col h-full">
-        <div className="flex items-center justify-between px-4 py-4 border-b border-slate-100">
+      <div className="w-full lg:w-52 shrink-0 bg-white border-b lg:border-b-0 lg:border-r border-slate-100 flex flex-row lg:flex-col h-auto lg:h-full overflow-x-auto lg:overflow-x-visible">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 shrink-0">
           <span className="text-sm font-semibold text-slate-700">Klanten</span>
           <button
             onClick={() => setCreateOpen(true)}
@@ -37,7 +37,7 @@ export function ClientSidebar({ clients }: ClientSidebarProps) {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-2">
+        <nav className="flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto py-2 lg:flex-1 gap-1 lg:gap-0 px-2 lg:px-0">
           {clients.length === 0 && (
             <p className="text-xs text-slate-400 px-4 py-3">
               Nog geen klanten. Klik + om een klant toe te voegen.

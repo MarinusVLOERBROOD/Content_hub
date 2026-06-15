@@ -289,7 +289,7 @@ export function KanbanBoard({ initialTasks, users, clients, currentUserId }: Kan
   return (
     <div className="flex flex-col h-full">
       {/* Filters */}
-      <div className="bg-white border-b border-slate-100 px-6 py-3 flex items-center gap-4">
+      <div className="bg-white border-b border-slate-100 px-4 lg:px-6 py-3 flex flex-wrap items-center gap-3">
         <select
           value={filterAssignee}
           onChange={(e) => setFilterAssignee(e.target.value)}
