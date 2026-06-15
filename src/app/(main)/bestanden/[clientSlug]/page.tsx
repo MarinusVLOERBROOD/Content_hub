@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useTransition, useCallback } from "react";
-import { Search, ChevronRight } from "lucide-react";
+import { Search, ChevronRight, FolderOpen, X } from "lucide-react";
 import { ClientSidebar } from "@/components/bestanden/ClientSidebar";
 import { FolderTree } from "@/components/bestanden/FolderTree";
 import { FileTable } from "@/components/bestanden/FileTable";
@@ -27,6 +27,7 @@ export default function ClientBestandenPage({ params }: PageProps) {
   const [files, setFiles] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [folderTreeOpen, setFolderTreeOpen] = useState(false);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -58,15 +59,14 @@ export default function ClientBestandenPage({ params }: PageProps) {
       {/* Client sidebar */}
       <ClientSidebar clients={clients} />
 
-      {/* Folder tree */}
-      <div className="w-52 shrink-0 bg-white border-r border-slate-100 flex flex-col">
+      {/* Folder tree — verborgen op mobiel, zichtbaar als modal via knop */}
+      <div className="hidden lg:flex w-52 shrink-0 bg-white border-r border-slate-100 flex-col">
         <div className="px-4 py-4 border-b border-slate-100">
           <p className="text-sm font-semibold text-slate-700">
             {currentClient?.name ?? clientSlug}
           </p>
         </div>
         <div className="flex-1 overflow-y-auto p-2">
-          {/* Root option */}
           <button
             onClick={() => setSelectedFolder("")}
             className={`flex items-center gap-2 w-full px-3 py-1.5 rounded-lg text-sm mb-1 ${
@@ -85,11 +85,51 @@ export default function ClientBestandenPage({ params }: PageProps) {
         </div>
       </div>
 
+      {/* FolderTree mobiel modal */}
+      {folderTreeOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-white flex flex-col">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+            <p className="text-sm font-semibold text-slate-700">
+              {currentClient?.name ?? clientSlug} — Mappen
+            </p>
+            <button
+              onClick={() => setFolderTreeOpen(false)}
+              className="p-1.5 rounded-lg text-slate-400 hover:bg-slate-100"
+            >
+              <X size={18} />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-2">
+            <button
+              onClick={() => { setSelectedFolder(""); setFolderTreeOpen(false); }}
+              className={`flex items-center gap-2 w-full px-3 py-1.5 rounded-lg text-sm mb-1 ${
+                selectedFolder === ""
+                  ? "bg-teal-50 text-teal-700 font-medium"
+                  : "text-slate-600 hover:bg-slate-50"
+              }`}
+            >
+              Alle bestanden
+            </button>
+            <FolderTree
+              nodes={folderTree}
+              selectedPath={selectedFolder}
+              onSelect={(path) => { setSelectedFolder(path); setFolderTreeOpen(false); }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Toolbar */}
-        <div className="bg-white border-b border-slate-100 px-6 py-3 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-1.5 text-sm text-slate-500">
+        <div className="bg-white border-b border-slate-100 px-4 lg:px-6 py-3 flex flex-wrap items-center gap-3">
+          <button
+            onClick={() => setFolderTreeOpen(true)}
+            className="lg:hidden flex items-center gap-1.5 px-3 py-1.5 text-sm border border-slate-200 rounded-lg hover:bg-slate-50 text-slate-600"
+          >
+            <FolderOpen size={14} /> Mappen
+          </button>
+          <div className="flex items-center gap-1.5 text-sm text-slate-500 mr-auto">
             <span>Bestanden</span>
             <ChevronRight size={14} />
             <span className="text-slate-800 font-medium">{selectedFolderName}</span>
@@ -101,7 +141,7 @@ export default function ClientBestandenPage({ params }: PageProps) {
               placeholder="Zoeken..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-8 pr-4 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 w-48"
+              className="pl-8 pr-4 py-1.5 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 w-full sm:w-48"
             />
           </div>
         </div>

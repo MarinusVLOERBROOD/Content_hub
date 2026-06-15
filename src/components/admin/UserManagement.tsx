@@ -153,7 +153,7 @@ export function UserManagement({ initialUsers }: { initialUsers: UserItem[] }) {
 
   return (
     <>
-      <div className="bg-white rounded-xl border border-slate-100 overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-100 overflow-x-auto">
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
           <span className="text-sm font-medium text-slate-700">{users.length} gebruiker(s)</span>
           <Button size="sm" onClick={() => setCreateOpen(true)}>

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Users, Folder, Settings, Share2, Trash2, ArrowLeft, Menu, X } from "lucide-react";
+import { LayoutDashboard, Users, Folder, Settings, Share2, Trash2, ArrowLeft } from "lucide-react";
 import { UserMenu } from "./UserMenu";
 
 const adminNavItems = [
@@ -29,40 +29,32 @@ export function AdminSidebar({ user }: AdminSidebarProps) {
 
   return (
     <>
-      {/* Hamburger knop — alleen zichtbaar op mobiel */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-3 left-3 z-50 p-2 rounded-lg bg-[#1b1117] text-slate-100 shadow-lg"
-        aria-label="Menu openen"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
+      {/* Mobiele topbar met geanimeerde hamburger */}
+      <div className="lg:hidden fixed top-0 left-0 right-0 z-50 h-12 bg-[#1b1117] flex items-center px-4 gap-3">
+        <button
+          onClick={() => setMobileOpen((o) => !o)}
+          className="flex flex-col justify-center gap-1.5 w-6 h-6 shrink-0"
+          aria-label={mobileOpen ? "Menu sluiten" : "Menu openen"}
+        >
+          <span className={`block h-0.5 w-6 bg-white rounded transition-all duration-200 origin-center ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
+          <span className={`block h-0.5 w-6 bg-white rounded transition-all duration-200 ${mobileOpen ? "opacity-0" : ""}`} />
+          <span className={`block h-0.5 w-6 bg-white rounded transition-all duration-200 origin-center ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
+        </button>
+        <div className="w-6 h-6 bg-purple-700 rounded-md flex items-center justify-center shrink-0">
+          <Settings className="w-3.5 h-3.5 text-white" />
+        </div>
+        <span className="font-semibold text-white text-sm">Beheer</span>
+      </div>
 
-      {/* Backdrop — mobiel, alleen als open */}
-      {mobileOpen && (
-        <div
-          className="lg:hidden fixed inset-0 z-40 bg-black/60"
-          onClick={() => setMobileOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
+      {/* Sidebar — full-screen op mobiel, vaste breedte op desktop */}
       <aside
-        className={`w-56 bg-[#1b1117] text-slate-100 flex flex-col h-full shrink-0
-          fixed lg:relative inset-y-0 left-0 z-50 lg:z-auto
+        className={`w-full lg:w-56 bg-[#1b1117] text-slate-100 flex flex-col h-full shrink-0
+          fixed lg:relative inset-0 lg:inset-auto z-40 lg:z-auto
           transition-transform duration-200 ease-in-out
+          pt-12 lg:pt-0
           ${mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
       >
-        {/* Sluitknop — alleen zichtbaar op mobiel */}
-        <button
-          onClick={() => setMobileOpen(false)}
-          className="lg:hidden absolute top-3 right-3 p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-[#2a1b23]"
-          aria-label="Menu sluiten"
-        >
-          <X className="w-4 h-4" />
-        </button>
-
-        <div className="flex items-center gap-2.5 px-5 py-5 border-b border-[#2a1b23]">
+        <div className="hidden lg:flex items-center gap-2.5 px-5 py-5 border-b border-[#2a1b23]">
           <div className="w-7 h-7 bg-purple-700 rounded-md flex items-center justify-center shrink-0">
             <Settings className="w-4 h-4 text-white" />
           </div>

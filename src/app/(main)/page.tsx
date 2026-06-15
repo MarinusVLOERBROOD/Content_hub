@@ -113,16 +113,16 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-4 lg:p-6 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">{greeting(session.name)}</h1>
           <p className="text-sm text-slate-500 mt-0.5">
             {format(new Date(), "EEEE d MMMM yyyy", { locale: nl })}
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Link href="/taken" className="flex items-center gap-1.5 px-4 py-2 border border-slate-200 text-slate-600 text-sm rounded-lg hover:bg-slate-50">
             <Plus size={14} /> Taak toevoegen
           </Link>
@@ -141,7 +141,8 @@ export default async function DashboardPage() {
           <h2 className="text-sm font-semibold text-slate-700">Deze week</h2>
           <Link href="/agenda" className="text-xs text-teal-600 hover:underline">Volledige agenda →</Link>
         </div>
-        <div className="grid grid-cols-7 gap-2">
+        <div className="overflow-x-auto -mx-1 px-1">
+        <div className="grid grid-cols-7 gap-2 min-w-[480px]">
           {weekDays.map((day) => {
             const isToday = isSameDay(day, new Date());
             const dayEvents = getEventsForDay(day);
@@ -189,6 +190,7 @@ export default async function DashboardPage() {
               </div>
             );
           })}
+        </div>
         </div>
       </div>
 

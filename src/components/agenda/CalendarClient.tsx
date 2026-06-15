@@ -188,12 +188,12 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Client filter */}
+          {/* Client filter — verborgen op mobiel */}
           {clients.length > 0 && (
             <select
               value={filterClient}
               onChange={(e) => setFilterClient(e.target.value)}
-              className="text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="hidden sm:block text-xs border border-slate-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
               <option value="">Alle klanten</option>
               {clients.map((c) => (
@@ -202,8 +202,8 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
             </select>
           )}
 
-          {/* Show deadlines toggle */}
-          <label className="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
+          {/* Show deadlines toggle — verborgen op mobiel */}
+          <label className="hidden sm:flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer">
             <input
               type="checkbox"
               checked={showDeadlines}
@@ -241,7 +241,6 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
       <div className="flex flex-1 overflow-hidden">
         {/* Calendar grid */}
         <div className="flex-1 overflow-auto min-w-0">
-          <div className="min-w-[600px]">
           {view === "month" && (
             <MonthView
               current={current}
@@ -270,12 +269,11 @@ export function CalendarClient({ events, taskDeadlines, users, clients, currentU
               onEventClick={openEdit}
             />
           )}
-          </div>
         </div>
 
-        {/* Colleague toggle sidebar */}
+        {/* Colleague toggle sidebar — verborgen op mobiel */}
         {users.length > 1 && (
-          <div className="w-48 shrink-0 border-l border-slate-100 bg-white p-4">
+          <div className="hidden lg:block w-48 shrink-0 border-l border-slate-100 bg-white p-4">
             <p className="text-xs font-semibold text-slate-500 uppercase mb-3">Collega&apos;s</p>
             {users.map((u) => (
               <label key={u.id} className="flex items-center gap-2 mb-2 cursor-pointer">
