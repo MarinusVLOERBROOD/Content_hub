@@ -3,13 +3,21 @@ import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import bcrypt from "bcryptjs";
 import path from "path";
 
-const dbPath = path.resolve(process.cwd(), "content-hub.db");
-const adapter = new PrismaBetterSqlite3({ url: dbPath });
+function getDbPath(): string {
+  const url = process.env.DATABASE_URL;
+  if (url?.startsWith("file:")) return url.slice(5);
+  return path.resolve(process.cwd(), "content-hub.db");
+}
+
+const adapter = new PrismaBetterSqlite3({ url: getDbPath() });
 const db = new PrismaClient({ adapter });
 
 async function main() {
-  // Clear existing users
-  await db.user.deleteMany({});
+  const existing = await db.user.findFirst({ where: { role: "admin" } });
+  if (existing) {
+    console.log("⏭️  Gebruikers bestaan al, seed overgeslagen.");
+    return;
+  }
 
   const adminHash = await bcrypt.hash("admin1234", 10);
   const userHash = await bcrypt.hash("user1234", 10);

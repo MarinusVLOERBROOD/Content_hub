@@ -9,8 +9,13 @@ import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import path from "path";
 
-const dbPath = path.resolve(process.cwd(), "content-hub.db");
-const adapter = new PrismaBetterSqlite3({ url: dbPath });
+function getDbPath(): string {
+  const url = process.env.DATABASE_URL;
+  if (url?.startsWith("file:")) return url.slice(5);
+  return path.resolve(process.cwd(), "content-hub.db");
+}
+
+const adapter = new PrismaBetterSqlite3({ url: getDbPath() });
 const db = new PrismaClient({ adapter });
 
 function rel(offsetDays: number, hour = 9, minute = 0) {
@@ -28,16 +33,14 @@ async function main() {
     process.exit(1);
   }
 
+  const taskCount = await db.task.count();
+  if (taskCount > 0) {
+    console.log("⏭️  Demo-data bestaat al, overgeslagen.");
+    return;
+  }
+
   const [admin, marinus, lisa] = users;
   const userList = [admin, marinus, lisa].filter(Boolean);
-
-  // ── Oude taken en afspraken wissen ──────────────────────────────────────────
-  await db.eventAttendee.deleteMany({});
-  await db.eventTag.deleteMany({});
-  await db.event.deleteMany({});
-  await db.taskTag.deleteMany({});
-  await db.task.deleteMany({});
-  console.log("🗑️  Oude taken en afspraken verwijderd");
 
   // ── Klanten aanmaken ────────────────────────────────────────────────────────
   const clientData = [
